@@ -4,9 +4,11 @@ import org.apache.logging.log4j.{LogManager, Logger}
 import tbank.academy.scala.fractals.data.AffineParams
 import tbank.academy.scala.fractals.drawer.ChaosGame
 import tbank.academy.scala.fractals.drawer.variations.{LinearVariationFunction, SinusoidalVariationFunction, SphericalVariationFunction, WeightedVariationFunction}
+import tbank.academy.scala.fractals.errors.JavaError
 import tbank.academy.scala.fractals.image.ImageDrawer
 
-import java.io.File
+import java.io.FileOutputStream
+import scala.util.{Failure, Success, Try}
 
 object FractalFlame {
   private val logger: Logger = LogManager.getLogger(getClass)
@@ -42,11 +44,18 @@ object FractalFlame {
         val drawer = new ImageDrawer()
 
         logger.info("Drawing image")
-        drawer.draw(result, new File("output.png")) match {
-          case None =>
-            logger.info("Drawing image completed")
-          case Some(error) =>
-            logger.error(error)
+        Try(new FileOutputStream("output.png")) match {
+          case Failure(exception) =>
+            logger.error(JavaError(exception))
+          case Success(outputStream) =>
+            drawer.draw(result, outputStream) match {
+              case None =>
+                outputStream.close()
+                logger.info("Drawing image completed")
+              case Some(error) =>
+                outputStream.close()
+                logger.error(error)
+            }
         }
     }
   }

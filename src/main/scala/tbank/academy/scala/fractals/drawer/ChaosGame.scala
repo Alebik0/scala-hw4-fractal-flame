@@ -91,50 +91,6 @@ class ChaosGame(width: Int,
           pointsHit(nextPoint, step + 1, acc)
     }
   }
-
-  //  void render (int n, int eqCount, int it, int xRes, int yRes) {
-  //    Генерируем eqCount аффинных преобразований со стартовыми цветами;
-  //    for (int num = 0; num < n; num ++) {
-  //      //Для изображения размером 1920х1080 можно
-  //      //взять XMIN=-1.777,XMAX=1.777,YMIN=-1,YMAX=1
-  //      //В этом случае в большинстве нелинейных преобразований с боков не будет оставаться черных областей
-  //      newX = Rand(XMIN, XMAX);
-  //      newY = Rand(YMIN, YMAX);
-  //      //Первые 20 итераций точку не рисуем, т.к. сначала надо найти начальную
-  //      for (int step =- 20; step < it; step ++
-  //      )
-  //      {
-  //        //Выбираем одно из аффинных преобразований
-  //        i = Rand(0, eqCount);
-  //        //и применяем его
-  //        x = coeff[i].a * newX + coeff[i].b * newY + coeff[i].c;
-  //        y = coeff[i].d * newX + coeff[i].e * newY + coeff[i].f;
-  //        Применяем нелинейное преобразование;
-  //        if (step >= 0 && newX ∈[XMIN, XMAX] && newY ∈[YMIN, YMAX]) {
-  //          //Вычисляем координаты точки, а затем задаем цвет
-  //          x1 = xRes - Trunc(((XMAX - newX) / (XMAX - XMIN)) * xRes);
-  //          y1 = yRes - Trunc(((YMAX - newY) / (YMAX - YMIN)) * yRes);
-  //          //Если точка попала в область изображения
-  //          if (x1 < xRes && y1 < yRes) {
-  //            //то проверяем, первый ли раз попали в нее
-  //            if (pixels[x1][y1].counter == 0) {
-  //              //Попали в первый раз, берем стартовый цвет у соответствующего аффинного преобразования
-  //              pixels[x1][y1].red = coeff[i].red;
-  //              pixels[x1][y1].green = coeff[i].green;
-  //              pixels[x1][y1].blue = coeffs[i].blue;
-  //            } else {
-  //              //Попали не в первый раз, считаем так:
-  //              pixels[x1][y1].red = (pixels[x1][y1].red + coeff[i].red) / 2;
-  //              pixels[x1][y1].green = (pixels[x1][y1].green + coeff[i].green) / 2;
-  //              pixels[x1][y1].blue = (pixels[x1][y1].blue + coeff[i].blue) / 2;
-  //            }
-  //            //Увеличиваем счетчик точки на единицу
-  //            pixels[x1][y1].counter ++;
-  //          }
-  //        }
-  //      }
-  //    }
-  //  }
 }
 
 
