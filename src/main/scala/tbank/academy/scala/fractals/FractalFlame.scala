@@ -31,6 +31,7 @@ object FractalFlame {
       width = programArguments.width,
       height = programArguments.height,
       zoom = 0.5,
+      threads = programArguments.threads,
       seed = programArguments.seed,
       iterationCount = programArguments.iterationCount,
       affineParams = programArguments.affineParams.map(ColoredAffineParams(_, random.nextInt(255), random.nextInt(255), random.nextInt(255))),

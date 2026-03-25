@@ -15,6 +15,21 @@ case class PixelData(red: Int,
       alpha = this.alpha,
       hits = this.hits + 1
     )
+
+  def join(other: PixelData): PixelData = {
+    if (hits == 0)
+      other
+    else if (other.hits == 0)
+      this
+    else
+      PixelData(
+        (red + other.red) / 2,
+        (green + other.green) / 2,
+        (blue + other.blue) / 2,
+        (alpha + other.alpha) / 2,
+        hits + other.hits,
+      )
+  }
 }
 
 object PixelData {
