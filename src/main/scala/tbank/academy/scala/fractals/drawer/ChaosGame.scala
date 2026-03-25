@@ -2,7 +2,7 @@ package tbank.academy.scala.fractals.drawer
 
 import org.apache.logging.log4j.{LogManager, Logger}
 import tbank.academy.scala.fractals.data.{AffineParams, ImageData, PixelData, Point}
-import tbank.academy.scala.fractals.drawer.variations.VariationFunction
+import tbank.academy.scala.fractals.drawer.variations.WeightedVariationFunction
 import tbank.academy.scala.fractals.errors.{DomainError, UnexpectedError}
 
 import scala.annotation.tailrec
@@ -14,7 +14,7 @@ class ChaosGame(width: Int,
                 seed: Long,
                 iterationCount: Int,
                 affineParams: List[AffineParams],
-                functions: List[VariationFunction]) {
+                functions: List[WeightedVariationFunction]) {
   private val logger: Logger = LogManager.getLogger(getClass)
 
   private val random = new Random(seed)
@@ -40,7 +40,7 @@ class ChaosGame(width: Int,
   }
 
   @tailrec
-  private def makePixel(localHits: List[HitData], acc: PixelData = PixelData.empty): PixelData =
+  final def makePixel(localHits: List[HitData], acc: PixelData = PixelData.empty): PixelData =
     localHits match {
       case Nil => acc
       case ::(head, next) =>
@@ -51,9 +51,9 @@ class ChaosGame(width: Int,
     }
 
   @tailrec
-  private def pointsHit(point: Point,
-                        step: Int = -20,
-                        acc: List[HitData] = List()): Either[DomainError, List[HitData]] = {
+  final def pointsHit(point: Point,
+                      step: Int = -20,
+                      acc: List[HitData] = List()): Either[DomainError, List[HitData]] = {
     val fIndex = random.nextInt(affineParams.length)
 
     affineParams.unapply(fIndex) match {
@@ -61,22 +61,23 @@ class ChaosGame(width: Int,
       case Some(affineParams) =>
         val nextPoint = functions
           .map(
-            function =>
-              function
+            weightedFunction =>
+              weightedFunction
+                .function
                 .apply(
                   x = point.x * affineParams.a + point.y * affineParams.b + affineParams.c,
                   y = point.x * affineParams.d + point.y * affineParams.e + affineParams.f,
                   params = affineParams
                 )
-                .times(function.weight)
+                .times(weightedFunction.weight)
           )
           .foldLeft(Point.zero)(_.add(_))
 
         if (step >= iterationCount)
           Right(acc)
         else if (step >= 0) {
-          val x = width / 2 + (nextPoint.x * zoom * math.min(width, height)).toInt
-          val y = height / 2 + (nextPoint.y * zoom * math.min(width, height)).toInt
+          val x = width / 2 + (nextPoint.x * zoom * math.min(width, height) / 2).toInt
+          val y = height / 2 + (nextPoint.y * zoom * math.min(width, height) / 2).toInt
           val hitData = HitData(
             imageX = x,
             imageY = y,
@@ -136,8 +137,4 @@ class ChaosGame(width: Int,
   //  }
 }
 
-private case class HitData(imageX: Int,
-                           imageY: Int,
-                           red: Int,
-                           green: Int,
-                           blue: Int)
+
