@@ -1,0 +1,32 @@
+### SBT ###
+dist/*
+target/
+lib_managed/
+src_managed/
+project/boot/
+project/plugins/project/
+.history
+.cache
+.lib/
+.bsp/
+
+### Scala ###
+*.class
+*.log
+
+### Local ###
+.env
+.DS_Store
+
+### Intellij ###
+.idea/
+
+### Metals ###
+/.metals/
+metals.sbt
+
+### Vscode ###
+/.vscode/
+
+### Bloop ###
+.bloop/
