@@ -65,8 +65,9 @@ class ChaosGameTest extends AnyFlatSpec with Matchers {
       WeightedVariationFunction(1.0, LinearVariationFunction)
     )
     val chaosGame = new ChaosGameThread(2000, 1000, 1.0, 1234, 5, affineParams, functions)
-    val localHits = List(
-    )
+    val localHits =
+      List(
+      )
     chaosGame.makePixel(localHits) shouldBe PixelData(0, 0, 0, 255, 0)
   }
 
@@ -95,9 +96,27 @@ class ChaosGameTest extends AnyFlatSpec with Matchers {
 
     chaosGame.render() shouldBe Right(ImageData(
       pixels = List(
-        List(PixelData(0, 0, 0, 255, 0), PixelData(0, 0, 0, 255, 0), PixelData(0, 0, 0, 255, 0), PixelData(0, 0, 0, 255, 0), PixelData(0, 0, 0, 255, 0)),
-        List(PixelData(0, 0, 0, 255, 0), PixelData(0, 0, 0, 255, 0), PixelData(0, 0, 0, 255, 0), PixelData(255, 0, 0, 255, 1000), PixelData(0, 0, 0, 255, 0)),
-        List(PixelData(0, 0, 0, 255, 0), PixelData(0, 0, 0, 255, 0), PixelData(0, 0, 0, 255, 0), PixelData(0, 0, 0, 255, 0), PixelData(0, 0, 0, 255, 0)),
+        List(
+          PixelData(0, 0, 0, 255, 0),
+          PixelData(0, 0, 0, 255, 0),
+          PixelData(0, 0, 0, 255, 0),
+          PixelData(0, 0, 0, 255, 0),
+          PixelData(0, 0, 0, 255, 0)
+        ),
+        List(
+          PixelData(0, 0, 0, 255, 0),
+          PixelData(0, 0, 0, 255, 0),
+          PixelData(0, 0, 0, 255, 0),
+          PixelData(255, 0, 0, 255, 1000),
+          PixelData(0, 0, 0, 255, 0)
+        ),
+        List(
+          PixelData(0, 0, 0, 255, 0),
+          PixelData(0, 0, 0, 255, 0),
+          PixelData(0, 0, 0, 255, 0),
+          PixelData(0, 0, 0, 255, 0),
+          PixelData(0, 0, 0, 255, 0)
+        ),
       ),
       width = 5,
       height = 3

@@ -26,7 +26,7 @@ object FractalFlame {
 
   private def runWithArgs(programArguments: ProgramArguments): Unit = {
     logger.debug("Running with arguments: " + programArguments.toString)
-    val random = new Random(programArguments.seed)
+    val random    = new Random(programArguments.seed)
     val chaosGame = new ChaosGame(
       width = programArguments.width,
       height = programArguments.height,
@@ -34,7 +34,12 @@ object FractalFlame {
       threads = programArguments.threads,
       seed = programArguments.seed,
       iterationCount = programArguments.iterationCount,
-      affineParams = programArguments.affineParams.map(ColoredAffineParams(_, random.nextInt(255), random.nextInt(255), random.nextInt(255))),
+      affineParams = programArguments.affineParams.map(ColoredAffineParams(
+        _,
+        random.nextInt(255),
+        random.nextInt(255),
+        random.nextInt(255)
+      )),
       functions = programArguments.functions.map(makeVariation)
     )
 
@@ -68,12 +73,12 @@ object FractalFlame {
     WeightedVariationFunction(
       fun.weight,
       fun.name match {
-        case "horseshoe" => HorseshoeVariationFunction
-        case "linear" => LinearVariationFunction
+        case "horseshoe"  => HorseshoeVariationFunction
+        case "linear"     => LinearVariationFunction
         case "sinusoidal" => SinusoidalVariationFunction
-        case "spherical" => SphericalVariationFunction
-        case "swirl" => SwirlVariationFunction
-        case _ => LinearVariationFunction
+        case "spherical"  => SphericalVariationFunction
+        case "swirl"      => SwirlVariationFunction
+        case _            => LinearVariationFunction
       }
     )
 }

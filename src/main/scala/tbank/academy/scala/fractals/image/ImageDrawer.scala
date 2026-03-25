@@ -15,7 +15,7 @@ class ImageDrawer {
   def draw(imageData: ImageData, outputStream: OutputStream): Option[DomainError] = {
     logger.debug(s"Preparing image to save with size: ${imageData.width}x${imageData.height}")
 
-    val imageOut = new BufferedImage(imageData.width, imageData.height, BufferedImage.TYPE_4BYTE_ABGR)
+    val imageOut       = new BufferedImage(imageData.width, imageData.height, BufferedImage.TYPE_4BYTE_ABGR)
     val imageOutPixels = imageData
       .pixels
       .flatten

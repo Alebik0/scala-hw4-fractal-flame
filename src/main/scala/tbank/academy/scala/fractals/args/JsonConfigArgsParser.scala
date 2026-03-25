@@ -21,23 +21,23 @@ object JsonConfigArgsParser {
         logger.info(s"Parsing JSON arguments from ${configFile.getAbsolutePath}")
         Try(Files.readString(configFile.toPath)) match {
           case Failure(exception) => Left(JavaError(exception))
-          case Success(value) => parseJsonConfig(value)
+          case Success(value)     => parseJsonConfig(value)
         }
       case None => Right(OptionalProgramArguments.empty)
     }
 
   def parseJsonConfig(value: String): Either[DomainError, OptionalProgramArguments] =
     decode[JsonProgramArguments](value) match {
-      case Left(error) => Left(JsonParseError(error))
+      case Left(error)  => Left(JsonParseError(error))
       case Right(value) => Right(OptionalProgramArguments(
-        width = value.size.map(_.width),
-        height = value.size.map(_.height),
-        seed = value.seed,
-        iterationCount = value.iteration_count,
-        outputPath = value.output_path,
-        threads = value.threads,
-        affineParams = value.affine_params,
-        functions = value.functions
-      ))
+          width = value.size.map(_.width),
+          height = value.size.map(_.height),
+          seed = value.seed,
+          iterationCount = value.iteration_count,
+          outputPath = value.output_path,
+          threads = value.threads,
+          affineParams = value.affine_params,
+          functions = value.functions
+        ))
     }
 }

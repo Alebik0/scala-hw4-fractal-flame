@@ -8,29 +8,31 @@ import tbank.academy.scala.fractals.errors.{DomainError, UnexpectedError}
 import scala.annotation.tailrec
 import scala.util.Random
 
-class ChaosGameThread(width: Int,
-                      height: Int,
-                      zoom: Double,
-                      seed: Long,
-                      iterationCount: Int,
-                      affineParams: List[ColoredAffineParams],
-                      functions: List[WeightedVariationFunction]) {
+class ChaosGameThread(
+    width: Int,
+    height: Int,
+    zoom: Double,
+    seed: Long,
+    iterationCount: Int,
+    affineParams: List[ColoredAffineParams],
+    functions: List[WeightedVariationFunction]
+) {
   private val logger: Logger = LogManager.getLogger(getClass)
 
   private val random = new Random(seed)
 
   def render(): Either[DomainError, ImageData] = {
-    val aspect = width.toDouble / height
+    val aspect       = width.toDouble / height
     val initialPoint = Point(random.nextDouble() * 2 * aspect - aspect, random.nextDouble() * 2 - 1)
 
     logger.info("Calculating point hits")
     pointsHit(initialPoint) match {
-      case Left(error) => Left(error)
+      case Left(error)        => Left(error)
       case Right(imagePoints) =>
         logger.info(s"Loaded ${imagePoints.length} hits")
         val imagePointsMap = imagePoints.groupBy(imagePoint => (imagePoint.imageX, imagePoint.imageY))
 
-        logger.info(s"Rendering pixels")
+        logger.info("Rendering pixels")
         val pixels = List.tabulate(height, width) { (row, col) =>
           makePixel(imagePointsMap.unapply((col, row)).getOrElse(List()))
         }
@@ -42,7 +44,7 @@ class ChaosGameThread(width: Int,
   @tailrec
   final def makePixel(localHits: List[HitData], acc: PixelData = PixelData.empty): PixelData =
     localHits match {
-      case Nil => acc
+      case Nil            => acc
       case ::(head, next) =>
         if (acc == PixelData.empty)
           makePixel(next, PixelData(red = head.red, green = head.green, blue = head.blue, alpha = 255, hits = 1))
@@ -51,33 +53,34 @@ class ChaosGameThread(width: Int,
     }
 
   @tailrec
-  final def pointsHit(point: Point,
-                      step: Int = -20,
-                      acc: List[HitData] = List()): Either[DomainError, List[HitData]] = {
+  final def pointsHit(
+      point: Point,
+      step: Int = -20,
+      acc: List[HitData] = List()
+  ): Either[DomainError, List[HitData]] = {
     val fIndex = random.nextInt(affineParams.length)
 
     affineParams.unapply(fIndex) match {
-      case None => Left(UnexpectedError(s"Cannot get F($fIndex) value"))
+      case None               => Left(UnexpectedError(s"Cannot get F($fIndex) value"))
       case Some(affineParams) =>
         val nextPoint = functions
-          .map(
-            weightedFunction =>
-              weightedFunction
-                .function
-                .apply(
-                  x = point.x * affineParams.params.a + point.y * affineParams.params.b + affineParams.params.c,
-                  y = point.x * affineParams.params.d + point.y * affineParams.params.e + affineParams.params.f,
-                  params = affineParams.params
-                )
-                .times(weightedFunction.weight)
+          .map(weightedFunction =>
+            weightedFunction
+              .function
+              .apply(
+                x = point.x * affineParams.params.a + point.y * affineParams.params.b + affineParams.params.c,
+                y = point.x * affineParams.params.d + point.y * affineParams.params.e + affineParams.params.f,
+                params = affineParams.params
+              )
+              .times(weightedFunction.weight)
           )
           .foldLeft(Point.zero)(_.add(_))
 
         if (step >= iterationCount)
           Right(acc)
         else if (step >= 0) {
-          val x = width / 2 + (nextPoint.x * zoom * math.min(width, height) / 2).toInt
-          val y = height / 2 + (nextPoint.y * zoom * math.min(width, height) / 2).toInt
+          val x       = width / 2 + (nextPoint.x * zoom * math.min(width, height) / 2).toInt
+          val y       = height / 2 + (nextPoint.y * zoom * math.min(width, height) / 2).toInt
           val hitData = HitData(
             imageX = x,
             imageY = y,
@@ -92,5 +95,3 @@ class ChaosGameThread(width: Int,
     }
   }
 }
-
-

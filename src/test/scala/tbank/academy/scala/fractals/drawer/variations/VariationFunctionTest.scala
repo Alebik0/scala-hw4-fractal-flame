@@ -1,14 +1,13 @@
 package tbank.academy.scala.fractals.drawer.variations
 
-
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import tbank.academy.scala.fractals.data.AffineParams
 
 class VariationFunctionTest extends AnyFlatSpec with Matchers {
-  private val ZERO_AFFINE_PARAMS = AffineParams(0, 0, 0, 0, 0, 0)
-  private val EPS = 1e-6
+  private val ZERO_AFFINE_PARAMS: AffineParams = AffineParams(0, 0, 0, 0, 0, 0)
+  private val EPS                              = 1e-6
 
   it should "LinearVariationFunction test #1" in {
     LinearVariationFunction.apply(1.0, 1.0, ZERO_AFFINE_PARAMS).x shouldBe 1.0 +- EPS

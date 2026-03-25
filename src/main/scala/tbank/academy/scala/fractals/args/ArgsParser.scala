@@ -25,13 +25,13 @@ class ArgsParser {
     logger.info("Parsing arguments")
 
     parseArgsMap(args) match {
-      case Left(error) => Left(error)
+      case Left(error)    => Left(error)
       case Right(argsMap) =>
         CommandLineArgsParser.parse(argsMap) match {
-          case Left(error) => Left(error)
+          case Left(error)                 => Left(error)
           case Right(commandLineArguments) =>
             JsonConfigArgsParser.parse(argsMap) match {
-              case Left(error) => Left(error)
+              case Left(error)            => Left(error)
               case Right(configArguments) =>
                 Right(defaultArguments.edit(configArguments).edit(commandLineArguments))
             }
@@ -40,7 +40,10 @@ class ArgsParser {
   }
 
   @tailrec
-  private def parseArgsMap(args: List[String], acc: Map[String, String] = Map()): Either[DomainError, Map[String, String]] =
+  private def parseArgsMap(
+      args: List[String],
+      acc: Map[String, String] = Map()
+  ): Either[DomainError, Map[String, String]] =
     args match {
       case ::(key, next) =>
         if (key.startsWith("--") || key.startsWith("-"))

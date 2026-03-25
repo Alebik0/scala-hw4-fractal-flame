@@ -93,20 +93,17 @@ class ArgsParserTest extends AnyFlatSpec with Matchers {
 
   it should "args parser test #6" in {
     val parser = new ArgsParser()
-    parser.parse("-f qwerrtyy".split(" ").toList
-    ).isLeft shouldBe true
+    parser.parse("-f qwerrtyy".split(" ").toList).isLeft shouldBe true
   }
 
   it should "args parser test #7" in {
     val parser = new ArgsParser()
-    parser.parse("-f".split(" ").toList
-    ).isLeft shouldBe true
+    parser.parse("-f".split(" ").toList).isLeft shouldBe true
   }
 
   it should "args parser test #8" in {
     val parser = new ArgsParser()
-    parser.parse("amogus".split(" ").toList
-    ).isLeft shouldBe true
+    parser.parse("amogus".split(" ").toList).isLeft shouldBe true
   }
 
   it should "json config args parser test #1" in {
@@ -162,7 +159,7 @@ class ArgsParserTest extends AnyFlatSpec with Matchers {
 
   it should "json config args parser test #2" in {
     val configSource = getClass.getResource("/config.json")
-    val file = new File(configSource.getPath).getAbsolutePath
+    val file         = new File(configSource.getPath).getAbsolutePath
 
     JsonConfigArgsParser.parse(Map("--config" -> file)) shouldBe Right(OptionalProgramArguments(
       Some(1920),
@@ -178,7 +175,7 @@ class ArgsParserTest extends AnyFlatSpec with Matchers {
 
   it should "json config args parser test #3" in {
     val configSource = getClass.getResource("/config_invalid.json")
-    val file = new File(configSource.getPath).getAbsolutePath
+    val file         = new File(configSource.getPath).getAbsolutePath
 
     JsonConfigArgsParser.parse(Map("--config" -> file)).isLeft shouldBe true
   }

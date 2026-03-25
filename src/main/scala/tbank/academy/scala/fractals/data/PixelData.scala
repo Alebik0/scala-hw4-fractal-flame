@@ -1,26 +1,28 @@
 package tbank.academy.scala.fractals.data
 
-case class PixelData(red: Int,
-                     green: Int,
-                     blue: Int,
-                     alpha: Int,
-                     hits: Int) {
-  def toInt: Int = (alpha & 0xFF) << 24 | (red & 0xFF) << 16 | (green & 0xFF) << 8 | (blue & 0xFF)
+case class PixelData(
+    red: Int,
+    green: Int,
+    blue: Int,
+    alpha: Int,
+    hits: Int
+) {
+  def toInt: Int = (alpha & 0xff) << 24 | (red & 0xff) << 16 | (green & 0xff) << 8 | (blue & 0xff)
 
-  def merge(red: Int, green: Int, blue: Int): PixelData =
+  def merge(r: Int, g: Int, b: Int): PixelData =
     PixelData(
-      red = (this.red + red) / 2,
-      green = (this.green + green) / 2,
-      blue = (this.blue + blue) / 2,
-      alpha = this.alpha,
-      hits = this.hits + 1
+      red = (red + r) / 2,
+      green = (green + g) / 2,
+      blue = (blue + b) / 2,
+      alpha = alpha,
+      hits = hits + 1
     )
 
   def join(other: PixelData): PixelData = {
     if (hits == 0)
-      other
+      PixelData(other.red, other.green, other.blue, other.alpha, other.hits)
     else if (other.hits == 0)
-      this
+      PixelData(red, green, blue, alpha, hits)
     else
       PixelData(
         (red + other.red) / 2,

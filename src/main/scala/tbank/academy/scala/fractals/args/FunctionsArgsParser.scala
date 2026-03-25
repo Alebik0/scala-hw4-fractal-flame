@@ -13,7 +13,7 @@ object FunctionsArgsParser {
       case Some(regexMatch) =>
         regexMatch.group(2).toDoubleOption match {
           case Some(weight) => Right(WeightedFunction(weight, regexMatch.group(1)))
-          case None => Left(InvalidArgsError("--functions or -f"))
+          case None         => Left(InvalidArgsError("--functions or -f"))
         }
       case None => Left(InvalidArgsError("--functions or -f"))
     }

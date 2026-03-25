@@ -10,15 +10,15 @@ object CommandLineArgsParser {
   def parse(argsMap: Map[String, String]): Either[DomainError, OptionalProgramArguments] = {
     logger.info("Parsing command line arguments")
 
-    val outputPathValue = parseOutput(argsMap)
-    val eitherWidthValue = parseWidth(argsMap)
-    val eitherHeightValue = parseHeight(argsMap)
-    val eitherSeedValue = parseSeedValue(argsMap)
+    val outputPathValue           = parseOutput(argsMap)
+    val eitherWidthValue          = parseWidth(argsMap)
+    val eitherHeightValue         = parseHeight(argsMap)
+    val eitherSeedValue           = parseSeedValue(argsMap)
     val eitherIterationCountValue = parseIterationCount(argsMap)
-    val eitherThreadsValue = parseThreads(argsMap)
-    val eitherAffineParamsValue = parseAffineParams(argsMap)
-    val eitherFunctionsValue = parseFunctions(argsMap)
-    val builder = new ResultBuilder(
+    val eitherThreadsValue        = parseThreads(argsMap)
+    val eitherAffineParamsValue   = parseAffineParams(argsMap)
+    val eitherFunctionsValue      = parseFunctions(argsMap)
+    val builder                   = new ResultBuilder(
       outputPathValue,
       eitherWidthValue,
       eitherHeightValue,
@@ -32,12 +32,16 @@ object CommandLineArgsParser {
     builder.build()
   }
 
-  private def parseIntArg(argsMap: Map[String, String], arg1: String, arg2: String): Either[DomainError, Option[Int]] = {
+  private def parseIntArg(
+      argsMap: Map[String, String],
+      arg1: String,
+      arg2: String
+  ): Either[DomainError, Option[Int]] = {
     argsMap.get(arg1).orElse(argsMap.get(arg2)) match {
       case Some(it) =>
         it.toIntOption match {
           case Some(value) => Right(Some(value))
-          case None => Left(InvalidArgsError(s"$arg1 or $arg2"))
+          case None        => Left(InvalidArgsError(s"$arg1 or $arg2"))
         }
       case None => Right(None)
     }
@@ -57,7 +61,7 @@ object CommandLineArgsParser {
       case Some(it) =>
         it.toLongOption match {
           case Some(value) => Right(Some(value))
-          case None => Left(InvalidArgsError("--seed"))
+          case None        => Left(InvalidArgsError("--seed"))
         }
       case None => Right(None)
     }
@@ -76,7 +80,7 @@ object CommandLineArgsParser {
           .foldLeft[Either[DomainError, List[AffineParams]]](Right(List())) {
             (acc, value) =>
               acc match {
-                case Left(error) => Left(error)
+                case Left(error)    => Left(error)
                 case Right(accList) => AffineParamsArgsParser.parse(value).map(accList :+ _)
               }
           }
@@ -93,7 +97,7 @@ object CommandLineArgsParser {
           .foldLeft[Either[DomainError, List[WeightedFunction]]](Right(List())) {
             (acc, value) =>
               acc match {
-                case Left(error) => Left(error)
+                case Left(error)    => Left(error)
                 case Right(accList) => FunctionsArgsParser.parse(value).map(accList :+ _)
               }
           }
@@ -103,5 +107,3 @@ object CommandLineArgsParser {
   }
 
 }
-
-
