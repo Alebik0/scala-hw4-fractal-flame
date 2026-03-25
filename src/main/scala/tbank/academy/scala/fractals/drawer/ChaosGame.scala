@@ -1,7 +1,7 @@
 package tbank.academy.scala.fractals.drawer
 
 import org.apache.logging.log4j.{LogManager, Logger}
-import tbank.academy.scala.fractals.data.{AffineParams, ImageData, PixelData, Point}
+import tbank.academy.scala.fractals.data.{ColoredAffineParams, ImageData, PixelData, Point}
 import tbank.academy.scala.fractals.drawer.variations.WeightedVariationFunction
 import tbank.academy.scala.fractals.errors.{DomainError, UnexpectedError}
 
@@ -13,7 +13,7 @@ class ChaosGame(width: Int,
                 zoom: Double,
                 seed: Long,
                 iterationCount: Int,
-                affineParams: List[AffineParams],
+                affineParams: List[ColoredAffineParams],
                 functions: List[WeightedVariationFunction]) {
   private val logger: Logger = LogManager.getLogger(getClass)
 
@@ -65,9 +65,9 @@ class ChaosGame(width: Int,
               weightedFunction
                 .function
                 .apply(
-                  x = point.x * affineParams.a + point.y * affineParams.b + affineParams.c,
-                  y = point.x * affineParams.d + point.y * affineParams.e + affineParams.f,
-                  params = affineParams
+                  x = point.x * affineParams.params.a + point.y * affineParams.params.b + affineParams.params.c,
+                  y = point.x * affineParams.params.d + point.y * affineParams.params.e + affineParams.params.f,
+                  params = affineParams.params
                 )
                 .times(weightedFunction.weight)
           )

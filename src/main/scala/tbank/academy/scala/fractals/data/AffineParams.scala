@@ -5,7 +5,4 @@ case class AffineParams(a: Double,
                         c: Double,
                         d: Double,
                         e: Double,
-                        f: Double,
-                        red: Int,
-                        green: Int,
-                        blue: Int)
+                        f: Double)

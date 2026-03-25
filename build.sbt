@@ -16,6 +16,9 @@ lazy val root = project.in(file("."))
       "org.typelevel"            %% "cats-effect"                   % "3.6.3",
       "org.scalatest"            %% "scalatest"                     % "3.2.19" % Test,
       "org.typelevel"            %% "cats-effect-testing-scalatest" % "1.7.0"  % Test,
+      "io.circe"                 %% "circe-core"                    % "0.14.15",
+      "io.circe"                 %% "circe-generic"                 % "0.14.15",
+      "io.circe"                 %% "circe-parser"                  % "0.14.15",
       "org.apache.logging.log4j" %% "log4j-api-scala"               % "13.1.0",
       "org.apache.logging.log4j"  % "log4j-core"                    % "2.25.3" % Runtime
     ),

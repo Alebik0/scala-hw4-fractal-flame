@@ -1,37 +1,40 @@
 package tbank.academy.scala.fractals
 
 import org.apache.logging.log4j.{LogManager, Logger}
-import tbank.academy.scala.fractals.data.AffineParams
+import tbank.academy.scala.fractals.args.ArgsParser
+import tbank.academy.scala.fractals.data.{ColoredAffineParams, ProgramArguments, WeightedFunction}
 import tbank.academy.scala.fractals.drawer.ChaosGame
-import tbank.academy.scala.fractals.drawer.variations.{LinearVariationFunction, SinusoidalVariationFunction, SphericalVariationFunction, WeightedVariationFunction}
+import tbank.academy.scala.fractals.drawer.variations._
 import tbank.academy.scala.fractals.errors.JavaError
 import tbank.academy.scala.fractals.image.ImageDrawer
 
 import java.io.FileOutputStream
-import scala.util.{Failure, Success, Try}
+import scala.util.{Failure, Random, Success, Try}
 
 object FractalFlame {
   private val logger: Logger = LogManager.getLogger(getClass)
 
   def main(args: Array[String]): Unit = {
+    val argsParser = new ArgsParser()
+    argsParser.parse(args.toList) match {
+      case Left(error) =>
+        logger.error(error)
+      case Right(value) =>
+        runWithArgs(value)
+    }
+  }
+
+  private def runWithArgs(programArguments: ProgramArguments): Unit = {
+    logger.debug("Running with arguments: " + programArguments.toString)
+    val random = new Random(programArguments.seed)
     val chaosGame = new ChaosGame(
-      width = 600,
-      height = 400,
-      zoom = 0.25,
-      seed = 1234,
-      iterationCount = 50_000,
-      affineParams = List(
-        AffineParams(1.116,0.081,0.941,-0.880,0.817,0.573, 255, 0, 0),
-        AffineParams(0.856,0.406,-0.444,-0.267,1.463,-0.414, 0, 255, 0),
-        AffineParams(-0.066,0.917,0.803,-1.232,-0.490,-1.376, 0, 0, 255),
-        AffineParams(0.337,1.106,0.601,-0.953,-1.453,-0.750, 128, 128, 0),
-        AffineParams(0.106,0.711,-1.410,-1.431,1.277,-0.904, 0, 128, 128),
-      ),
-      functions = List(
-        WeightedVariationFunction(0.4, LinearVariationFunction),
-        WeightedVariationFunction(0.3, SphericalVariationFunction),
-          WeightedVariationFunction(0.3, SinusoidalVariationFunction),
-      )
+      width = programArguments.width,
+      height = programArguments.height,
+      zoom = 0.5,
+      seed = programArguments.seed,
+      iterationCount = programArguments.iterationCount,
+      affineParams = programArguments.affineParams.map(ColoredAffineParams(_, random.nextInt(255), random.nextInt(255), random.nextInt(255))),
+      functions = programArguments.functions.map(makeVariation)
     )
 
     logger.info("Rendering image")
@@ -59,4 +62,17 @@ object FractalFlame {
         }
     }
   }
+
+  private def makeVariation(fun: WeightedFunction): WeightedVariationFunction =
+    WeightedVariationFunction(
+      fun.weight,
+      fun.name match {
+        case "horseshoe" => HorseshoeVariationFunction
+        case "linear" => LinearVariationFunction
+        case "sinusoidal" => SinusoidalVariationFunction
+        case "spherical" => SphericalVariationFunction
+        case "swirl" => SwirlVariationFunction
+        case _ => LinearVariationFunction
+      }
+    )
 }
