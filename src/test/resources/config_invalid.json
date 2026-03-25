@@ -1,0 +1,9 @@
+{
+  "size": {
+    "width": 1920,
+    "height": 1080
+  },
+  "iteration_count": 2500,
+  "output_path": "result.png",
+  "threads": 4,
+  "functions": [

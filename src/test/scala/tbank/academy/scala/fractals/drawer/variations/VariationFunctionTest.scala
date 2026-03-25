@@ -7,7 +7,7 @@ import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import tbank.academy.scala.fractals.data.AffineParams
 
 class VariationFunctionTest extends AnyFlatSpec with Matchers {
-  private val ZERO_AFFINE_PARAMS = AffineParams(0, 0, 0, 0, 0, 0, 0, 0, 0)
+  private val ZERO_AFFINE_PARAMS = AffineParams(0, 0, 0, 0, 0, 0)
   private val EPS = 1e-6
 
   it should "LinearVariationFunction test #1" in {

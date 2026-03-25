@@ -47,7 +47,7 @@ object FractalFlame {
         val drawer = new ImageDrawer()
 
         logger.info("Drawing image")
-        Try(new FileOutputStream("output.png")) match {
+        Try(new FileOutputStream(programArguments.outputPath)) match {
           case Failure(exception) =>
             logger.error(JavaError(exception))
           case Success(outputStream) =>

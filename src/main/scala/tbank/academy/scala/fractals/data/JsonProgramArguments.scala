@@ -3,9 +3,9 @@ package tbank.academy.scala.fractals.data
 case class JsonProgramArguments(
                                  size: Option[JsonSizeArguments],
                                  seed: Option[Long],
-                                 iterationCount: Option[Int],
-                                 outputPath: Option[String],
+                                 iteration_count: Option[Int],
+                                 output_path: Option[String],
                                  threads: Option[Int],
-                                 affineParams: List[AffineParams],
-                                 functions: List[WeightedFunction],
+                                 affine_params: Option[List[AffineParams]],
+                                 functions: Option[List[WeightedFunction]],
                                )

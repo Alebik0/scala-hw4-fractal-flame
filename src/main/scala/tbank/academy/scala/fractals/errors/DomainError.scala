@@ -2,7 +2,7 @@ package tbank.academy.scala.fractals.errors
 
 import io.circe
 
-sealed trait DomainError
+trait DomainError
 
 case class JavaError(javaError: Throwable) extends DomainError
 
