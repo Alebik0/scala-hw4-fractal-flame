@@ -13,9 +13,11 @@ lazy val root = project.in(file("."))
     name         := "hw4-fractal-flame",
     scalaVersion := "2.13.16",
     libraryDependencies ++= List(
-      "org.typelevel" %% "cats-effect"                   % "3.6.3",
-      "org.scalatest" %% "scalatest"                     % "3.2.19" % Test,
-      "org.typelevel" %% "cats-effect-testing-scalatest" % "1.7.0"  % Test
+      "org.typelevel"            %% "cats-effect"                   % "3.6.3",
+      "org.scalatest"            %% "scalatest"                     % "3.2.19" % Test,
+      "org.typelevel"            %% "cats-effect-testing-scalatest" % "1.7.0"  % Test,
+      "org.apache.logging.log4j" %% "log4j-api-scala"               % "13.1.0",
+      "org.apache.logging.log4j"  % "log4j-core"                    % "2.25.3" % Runtime
     ),
     scalacOptions ++= {
       CrossVersion.partialVersion(scalaVersion.value) match {
