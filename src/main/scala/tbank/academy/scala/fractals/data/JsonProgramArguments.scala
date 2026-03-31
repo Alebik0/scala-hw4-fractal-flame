@@ -9,4 +9,6 @@ case class JsonProgramArguments(
     affine_params: Option[List[AffineParams]],
     functions: Option[List[WeightedFunction]],
     symmetry_level: Option[Int],
+    gamma_correction: Option[Boolean],
+    gamma: Option[Double]
 )

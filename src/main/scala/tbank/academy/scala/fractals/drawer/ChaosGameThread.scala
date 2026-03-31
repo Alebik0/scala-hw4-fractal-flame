@@ -48,7 +48,7 @@ class ChaosGameThread(
       case Nil            => acc
       case ::(head, next) =>
         if (acc == PixelData.empty)
-          makePixel(next, PixelData(red = head.red, green = head.green, blue = head.blue, alpha = 255, hits = 1))
+          makePixel(next, PixelData(head.red, head.green, head.blue, alpha = 255, hits = 1))
         else
           makePixel(next, acc.merge(head.red, head.green, head.blue))
     }

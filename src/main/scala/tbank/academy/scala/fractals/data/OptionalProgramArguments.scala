@@ -10,9 +10,11 @@ case class OptionalProgramArguments(
     affineParams: Option[List[AffineParams]],
     functions: Option[List[WeightedFunction]],
     symmetryLevel: Option[Int],
+    gammaCorrection: Option[Boolean],
+    gamma: Option[Double]
 )
 
 object OptionalProgramArguments {
   def empty: OptionalProgramArguments =
-    OptionalProgramArguments(None, None, None, None, None, None, None, None, None)
+    OptionalProgramArguments(None, None, None, None, None, None, None, None, None, None, None)
 }

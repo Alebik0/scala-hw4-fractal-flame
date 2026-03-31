@@ -9,7 +9,9 @@ case class ProgramArguments(
     threads: Int,
     affineParams: List[AffineParams],
     functions: List[WeightedFunction],
-    symmetryLevel: Int
+    symmetryLevel: Int,
+    gammaCorrection: Boolean,
+    gamma: Double
 ) {
   def edit(update: OptionalProgramArguments): ProgramArguments =
     ProgramArguments(
@@ -22,5 +24,7 @@ case class ProgramArguments(
       update.affineParams.getOrElse(affineParams),
       update.functions.getOrElse(functions),
       update.symmetryLevel.getOrElse(symmetryLevel),
+      update.gammaCorrection.getOrElse(gammaCorrection),
+      update.gamma.getOrElse(gamma),
     )
 }

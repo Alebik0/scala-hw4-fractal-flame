@@ -38,7 +38,9 @@ object JsonConfigArgsParser {
           threads = value.threads,
           affineParams = value.affine_params,
           functions = value.functions,
-          symmetryLevel = value.symmetry_level
+          symmetryLevel = value.symmetry_level,
+          gammaCorrection = value.gamma_correction,
+          gamma = value.gamma
         ))
     }
 }

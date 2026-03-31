@@ -12,7 +12,9 @@ class ResultBuilder(
     eitherThreadsValue: Either[DomainError, Option[Int]],
     eitherAffineParamsValue: Either[DomainError, Option[List[AffineParams]]],
     eitherFunctionsValue: Either[DomainError, Option[List[WeightedFunction]]],
-    eitherSymmetryLevel: Either[DomainError, Option[Int]]
+    eitherSymmetryLevel: Either[DomainError, Option[Int]],
+    eitherGammaCorrection: Either[DomainError, Option[Boolean]],
+    eitherGamma: Either[DomainError, Option[Double]],
 ) {
   def build(): Either[DomainError, OptionalProgramArguments] = {
     eitherWidthValue match {
@@ -105,9 +107,9 @@ class ResultBuilder(
       functionsValue: Option[List[WeightedFunction]]
   ): Either[DomainError, OptionalProgramArguments] = {
     eitherSymmetryLevel match {
-      case Left(error)           => Left(error)
-      case Right(symmetryValue) =>
-        build9(widthValue, heightValue, seedValue, iterationCountValue, threadsValue, affineParamsValue, functionsValue, symmetryValue)
+      case Left(error)               => Left(error)
+      case Right(symmetryLevelValue) =>
+        build9(widthValue, heightValue, seedValue, iterationCountValue, threadsValue, affineParamsValue, functionsValue, symmetryLevelValue)
     }
   }
 
@@ -119,7 +121,44 @@ class ResultBuilder(
       threadsValue: Option[Int],
       affineParamsValue: Option[List[AffineParams]],
       functionsValue: Option[List[WeightedFunction]],
-      symmetryValue: Option[Int],
+      symmetryLevelValue: Option[Int],
+  ): Either[DomainError, OptionalProgramArguments] = {
+    eitherGammaCorrection match {
+      case Left(error)                 => Left(error)
+      case Right(gammaCorrectionValue) =>
+        build10(widthValue, heightValue, seedValue, iterationCountValue, threadsValue, affineParamsValue, functionsValue, symmetryLevelValue, gammaCorrectionValue)
+    }
+  }
+
+  private def build10(
+      widthValue: Option[Int],
+      heightValue: Option[Int],
+      seedValue: Option[Long],
+      iterationCountValue: Option[Int],
+      threadsValue: Option[Int],
+      affineParamsValue: Option[List[AffineParams]],
+      functionsValue: Option[List[WeightedFunction]],
+      symmetryLevelValue: Option[Int],
+      gammaCorrectionValue: Option[Boolean],
+  ): Either[DomainError, OptionalProgramArguments] = {
+    eitherGamma match {
+      case Left(error)       => Left(error)
+      case Right(gammaValue) =>
+        buildFinal(widthValue, heightValue, seedValue, iterationCountValue, threadsValue, affineParamsValue, functionsValue, symmetryLevelValue, gammaCorrectionValue, gammaValue)
+    }
+  }
+
+  private def buildFinal(
+                          widthValue: Option[Int],
+                          heightValue: Option[Int],
+                          seedValue: Option[Long],
+                          iterationCountValue: Option[Int],
+                          threadsValue: Option[Int],
+                          affineParamsValue: Option[List[AffineParams]],
+                          functionsValue: Option[List[WeightedFunction]],
+                          symmetryLevelValue: Option[Int],
+                          gammaCorrectionValue: Option[Boolean],
+                          gammaValue: Option[Double],
   ): Either[DomainError, OptionalProgramArguments] = {
     Right(
       OptionalProgramArguments(
@@ -131,7 +170,9 @@ class ResultBuilder(
         threads = threadsValue,
         affineParams = affineParamsValue,
         functions = functionsValue,
-        symmetryValue
+        symmetryLevel = symmetryLevelValue,
+        gammaCorrection = gammaCorrectionValue,
+        gamma = gammaValue
       )
     )
   }

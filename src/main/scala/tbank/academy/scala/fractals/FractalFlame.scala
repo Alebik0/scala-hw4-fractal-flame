@@ -3,7 +3,7 @@ package tbank.academy.scala.fractals
 import org.apache.logging.log4j.{LogManager, Logger}
 import tbank.academy.scala.fractals.args.ArgsParser
 import tbank.academy.scala.fractals.data.{ColoredAffineParams, ProgramArguments, WeightedFunction}
-import tbank.academy.scala.fractals.drawer.ChaosGame
+import tbank.academy.scala.fractals.drawer.{ChaosGame, GamaCorrection}
 import tbank.academy.scala.fractals.drawer.variations._
 import tbank.academy.scala.fractals.errors.JavaError
 import tbank.academy.scala.fractals.image.ImageDrawer
@@ -36,35 +36,43 @@ object FractalFlame {
       iterationCount = programArguments.iterationCount,
       affineParams = programArguments.affineParams.map(ColoredAffineParams(
         _,
-        random.nextInt(255),
-        random.nextInt(255),
-        random.nextInt(255)
+        random.nextInt(255).toDouble / 256,
+        random.nextInt(255).toDouble / 256,
+        random.nextInt(255).toDouble / 256,
       )),
       functions = programArguments.functions.map(makeVariation),
       symmetryLevel = programArguments.symmetryLevel,
     )
+    val gammaCorrection = new GamaCorrection(
+      tunedOn = programArguments.gammaCorrection,
+      gamma = programArguments.gamma
+    )
+    val drawer = new ImageDrawer()
 
     logger.info("Rendering image")
     chaosGame.render() match {
       case Left(error) =>
         logger.error(error)
-      case Right(result) =>
+      case Right(imageData) =>
         logger.info("Rendering image completed")
 
-        val drawer = new ImageDrawer()
-
-        logger.info("Drawing image")
-        Try(new FileOutputStream(programArguments.outputPath)) match {
-          case Failure(exception) =>
-            logger.error(JavaError(exception))
-          case Success(outputStream) =>
-            drawer.draw(result, outputStream) match {
-              case None =>
-                outputStream.close()
-                logger.info("Drawing image completed")
-              case Some(error) =>
-                outputStream.close()
-                logger.error(error)
+        gammaCorrection.render(imageData) match {
+          case Left(error) =>
+            logger.error(error)
+          case Right(result) =>
+            logger.info("Drawing image")
+            Try(new FileOutputStream(programArguments.outputPath)) match {
+              case Failure(exception) =>
+                logger.error(JavaError(exception))
+              case Success(outputStream) =>
+                drawer.draw(result, outputStream) match {
+                  case None =>
+                    outputStream.close()
+                    logger.info("Drawing image completed")
+                  case Some(error) =>
+                    outputStream.close()
+                    logger.error(error)
+                }
             }
         }
     }

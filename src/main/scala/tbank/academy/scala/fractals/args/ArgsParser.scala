@@ -19,7 +19,9 @@ class ArgsParser {
       threads = 1,
       affineParams = List(),
       functions = List(),
-      symmetryLevel = 1
+      symmetryLevel = 1,
+      gammaCorrection = false,
+      gamma = 2.2,
     )
 
   def parse(args: List[String]): Either[DomainError, ProgramArguments] = {

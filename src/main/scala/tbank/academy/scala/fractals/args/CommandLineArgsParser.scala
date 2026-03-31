@@ -10,16 +10,18 @@ object CommandLineArgsParser {
   def parse(argsMap: Map[String, String]): Either[DomainError, OptionalProgramArguments] = {
     logger.info("Parsing command line arguments")
 
-    val outputPathValue           = parseOutput(argsMap)
-    val eitherWidthValue          = parseWidth(argsMap)
-    val eitherHeightValue         = parseHeight(argsMap)
-    val eitherSeedValue           = parseSeedValue(argsMap)
-    val eitherIterationCountValue = parseIterationCount(argsMap)
-    val eitherThreadsValue        = parseThreads(argsMap)
-    val eitherAffineParamsValue   = parseAffineParams(argsMap)
-    val eitherFunctionsValue      = parseFunctions(argsMap)
-    val eitherSymmetryLevelValue  = parseSymmetryLevel(argsMap)
-    val builder                   = new ResultBuilder(
+    val outputPathValue            = parseOutput(argsMap)
+    val eitherWidthValue           = parseWidth(argsMap)
+    val eitherHeightValue          = parseHeight(argsMap)
+    val eitherSeedValue            = parseSeedValue(argsMap)
+    val eitherIterationCountValue  = parseIterationCount(argsMap)
+    val eitherThreadsValue         = parseThreads(argsMap)
+    val eitherAffineParamsValue    = parseAffineParams(argsMap)
+    val eitherFunctionsValue       = parseFunctions(argsMap)
+    val eitherSymmetryLevelValue   = parseSymmetryLevel(argsMap)
+    val eitherGammaCorrectionValue = parseGammaCorrection(argsMap)
+    val eitherGammaValue           = parseGamma(argsMap)
+    val builder                    = new ResultBuilder(
       outputPathValue,
       eitherWidthValue,
       eitherHeightValue,
@@ -28,7 +30,9 @@ object CommandLineArgsParser {
       eitherThreadsValue,
       eitherAffineParamsValue,
       eitherFunctionsValue,
-      eitherSymmetryLevelValue
+      eitherSymmetryLevelValue,
+      eitherGammaCorrectionValue,
+      eitherGammaValue
     )
 
     builder.build()
@@ -48,6 +52,24 @@ object CommandLineArgsParser {
             else
               Left(InvalidArgsError(s"$arg1 or $arg2: negative integer provided"))
           case None        => Left(InvalidArgsError(s"$arg1 or $arg2"))
+        }
+      case None => Right(None)
+    }
+  }
+
+  private def parsePositiveDoubleArg(
+      argsMap: Map[String, String],
+      arg1: String,
+  ): Either[DomainError, Option[Double]] = {
+    argsMap.get(arg1) match {
+      case Some(it) =>
+        it.toDoubleOption match {
+          case Some(value) =>
+            if (value > 0)
+              Right(Some(value))
+            else
+              Left(InvalidArgsError(s"$arg1: negative double provided"))
+          case None        => Left(InvalidArgsError(s"$arg1"))
         }
       case None => Right(None)
     }
@@ -114,4 +136,18 @@ object CommandLineArgsParser {
 
   private def parseSymmetryLevel(argsMap: Map[String, String]): Either[DomainError, Option[Int]] =
     parsePositiveIntArg(argsMap, "--symmetry-level", "-s")
+
+  private def parseGammaCorrection(argsMap: Map[String, String]): Either[DomainError, Option[Boolean]] = {
+    argsMap.get("--gamma-correction").orElse(argsMap.get("-g")) match {
+      case Some(it) =>
+        it.toBooleanOption match {
+          case Some(value) => Right(Some(value))
+          case None        => Left(InvalidArgsError("--gamma-correction or -g"))
+        }
+      case None => Right(None)
+    }
+  }
+
+  private def parseGamma(argsMap: Map[String, String]): Either[DomainError, Option[Double]] =
+    parsePositiveDoubleArg(argsMap, "--gamma")
 }

@@ -2,7 +2,7 @@ package tbank.academy.scala.fractals.data
 
 case class ColoredAffineParams(
     params: AffineParams,
-    red: Int,
-    green: Int,
-    blue: Int
+    red: Double,
+    green: Double,
+    blue: Double
 )
