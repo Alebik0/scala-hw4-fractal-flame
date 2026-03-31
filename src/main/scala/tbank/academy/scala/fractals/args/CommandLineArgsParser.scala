@@ -51,7 +51,7 @@ object CommandLineArgsParser {
               Right(Some(value))
             else
               Left(InvalidArgsError(s"$arg1 or $arg2: negative integer provided"))
-          case None        => Left(InvalidArgsError(s"$arg1 or $arg2"))
+          case None => Left(InvalidArgsError(s"$arg1 or $arg2"))
         }
       case None => Right(None)
     }
@@ -69,7 +69,7 @@ object CommandLineArgsParser {
               Right(Some(value))
             else
               Left(InvalidArgsError(s"$arg1: negative double provided"))
-          case None        => Left(InvalidArgsError(s"$arg1"))
+          case None => Left(InvalidArgsError(s"$arg1"))
         }
       case None => Right(None)
     }

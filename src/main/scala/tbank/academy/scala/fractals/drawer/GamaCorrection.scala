@@ -16,22 +16,19 @@ class GamaCorrection(val tunedOn: Boolean, val gamma: Double) {
         height = imageData.height,
         pixels = imageData
           .pixels
-          .map(
-            row =>
-              row.map(
-                (pixelData: PixelData) =>
-                  PixelData(
-                    red = math.pow(pixelData.red, 1.0 / gamma),
-                    green = math.pow(pixelData.green, 1.0 / gamma),
-                    blue = math.pow(pixelData.blue, 1.0 / gamma),
-                    alpha = pixelData.alpha,
-                    hits = pixelData.hits
-                  )
+          .map(row =>
+            row.map((pixelData: PixelData) =>
+              PixelData(
+                red = math.pow(pixelData.red, 1.0 / gamma),
+                green = math.pow(pixelData.green, 1.0 / gamma),
+                blue = math.pow(pixelData.blue, 1.0 / gamma),
+                alpha = pixelData.alpha,
+                hits = pixelData.hits
               )
+            )
           )
       ))
-    }
-    else {
+    } else {
       logger.info("Skipping gamma correction")
       Right(imageData)
     }

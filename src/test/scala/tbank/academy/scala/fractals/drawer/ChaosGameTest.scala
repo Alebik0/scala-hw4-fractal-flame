@@ -122,4 +122,42 @@ class ChaosGameTest extends AnyFlatSpec with Matchers {
       height = 3
     ))
   }
+
+  it should "render test multithreaded" in {
+    val affineParams = List(
+      ColoredAffineParams(AffineParams(0.0, 0.0, 1.0, 0.0, 0.0, 0.0), 1.0, 0, 0)
+    )
+    val functions = List(
+      WeightedVariationFunction(1.0, LinearVariationFunction)
+    )
+    val chaosGame = new ChaosGame(5, 3, 1.0, 1234, 4, 1000, affineParams, functions, 1)
+
+    chaosGame.render() shouldBe Right(ImageData(
+      pixels = List(
+        List(
+          PixelData(0, 0, 0, 1.0, 0),
+          PixelData(0, 0, 0, 1.0, 0),
+          PixelData(0, 0, 0, 1.0, 0),
+          PixelData(0, 0, 0, 1.0, 0),
+          PixelData(0, 0, 0, 1.0, 0)
+        ),
+        List(
+          PixelData(0, 0, 0, 1.0, 0),
+          PixelData(0, 0, 0, 1.0, 0),
+          PixelData(0, 0, 0, 1.0, 0),
+          PixelData(1.0, 0, 0, 1.0, 1000),
+          PixelData(0, 0, 0, 1.0, 0)
+        ),
+        List(
+          PixelData(0, 0, 0, 1.0, 0),
+          PixelData(0, 0, 0, 1.0, 0),
+          PixelData(0, 0, 0, 1.0, 0),
+          PixelData(0, 0, 0, 1.0, 0),
+          PixelData(0, 0, 0, 1.0, 0)
+        ),
+      ),
+      width = 5,
+      height = 3
+    ))
+  }
 }

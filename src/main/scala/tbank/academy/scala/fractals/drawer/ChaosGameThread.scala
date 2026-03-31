@@ -81,18 +81,16 @@ class ChaosGameThread(
           Right(acc)
         else if (step >= 0) {
           val hits = symmetryPoints(nextPoint)
-            .map(
-              p => {
-                val (x, y) = pointToImage(p)
-                HitData(
-                  imageX = x,
-                  imageY = y,
-                  red = affineParams.red,
-                  green = affineParams.green,
-                  blue = affineParams.blue
-                )
-              }
-            )
+            .map(p => {
+              val (x, y) = pointToImage(p)
+              HitData(
+                imageX = x,
+                imageY = y,
+                red = affineParams.red,
+                green = affineParams.green,
+                blue = affineParams.blue
+              )
+            })
 
           pointsHit(nextPoint, step + 1, acc :++ hits)
         } else
@@ -103,12 +101,11 @@ class ChaosGameThread(
   private def symmetryPoints(point: Point): List[Point] = {
     val angle = 2.0 * math.Pi / symmetryLevel
     (0 until symmetryLevel)
-      .map(
-        alpha =>
-          Point(
-            point.x * math.cos(angle * alpha) - point.y * math.sin(angle * alpha),
-            point.x * math.sin(angle * alpha) + point.y * math.cos(angle * alpha)
-          )
+      .map(alpha =>
+        Point(
+          point.x * math.cos(angle * alpha) - point.y * math.sin(angle * alpha),
+          point.x * math.sin(angle * alpha) + point.y * math.cos(angle * alpha)
+        )
       )
       .toList
   }

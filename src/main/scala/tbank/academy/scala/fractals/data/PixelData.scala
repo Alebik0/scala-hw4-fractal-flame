@@ -9,9 +9,9 @@ case class PixelData(
 ) {
   def toInt: Int = {
     val alphaInt = math.min((256 * alpha).toInt, 255)
-    val redInt = math.min((256 * red).toInt, 255)
+    val redInt   = math.min((256 * red).toInt, 255)
     val greenInt = math.min((256 * green).toInt, 255)
-    val blueInt = math.min((256 * blue).toInt, 255)
+    val blueInt  = math.min((256 * blue).toInt, 255)
 
     (alphaInt & 0xff) << 24 | (redInt & 0xff) << 16 | (greenInt & 0xff) << 8 | (blueInt & 0xff)
   }

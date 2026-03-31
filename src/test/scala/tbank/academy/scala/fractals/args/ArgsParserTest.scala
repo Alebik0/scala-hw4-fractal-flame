@@ -33,7 +33,10 @@ class ArgsParserTest extends AnyFlatSpec with Matchers {
         "-i 50000 " +
         "-t 1 " +
         "-ap 1.116,0.081,0.941,-0.880,0.817,0.573/0.856,0.406,-0.444,-0.267,1.463,-0.414/-0.066,0.917,0.803,-1.232,-0.490,-1.376/0.337,1.106,0.601,-0.953,-1.453,-0.750/0.106,0.711,-1.410,-1.431,1.277,-0.904 " +
-        "-f linear:0.4,spherical:0.3,sinusoidal:0.3").split(" ").toList
+        "-f linear:0.4,spherical:0.3,sinusoidal:0.3 " +
+        "-s 4 " +
+        "-g true " +
+        "--gamma 2.0").split(" ").toList
     ) shouldBe Right(ProgramArguments(
       1920,
       1080,
@@ -53,13 +56,13 @@ class ArgsParserTest extends AnyFlatSpec with Matchers {
         WeightedFunction(0.3, "spherical"),
         WeightedFunction(0.3, "sinusoidal"),
       ),
-      1,
-      gammaCorrection = false,
-      2.2
+      symmetryLevel = 4,
+      gammaCorrection = true,
+      gamma = 2.0
     ))
   }
 
-  it should "args parser test #2" in {
+  it should "args parser test: invalid seed" in {
     val parser = new ArgsParser()
     parser.parse(
       ("--seed qwerty " +
@@ -70,7 +73,7 @@ class ArgsParserTest extends AnyFlatSpec with Matchers {
     ).isLeft shouldBe true
   }
 
-  it should "args parser test #3" in {
+  it should "args parser test: invalid iteration count, non-number" in {
     val parser = new ArgsParser()
     parser.parse(
       ("-i qwertry " +
@@ -80,7 +83,27 @@ class ArgsParserTest extends AnyFlatSpec with Matchers {
     ).isLeft shouldBe true
   }
 
-  it should "args parser test #4" in {
+  it should "args parser test: invalid iteration count, negative number" in {
+    val parser = new ArgsParser()
+    parser.parse(
+      ("-i -1000 " +
+        "-t 1 " +
+        "-ap 1.116,0.081,0.941,-0.880,0.817,0.573/0.856,0.406,-0.444,-0.267,1.463,-0.414/-0.066,0.917,0.803,-1.232,-0.490,-1.376/0.337,1.106,0.601,-0.953,-1.453,-0.750/0.106,0.711,-1.410,-1.431,1.277,-0.904 " +
+        "-f linear:0.4,spherical:0.3,sinusoidal:0.3").split(" ").toList
+    ).isLeft shouldBe true
+  }
+
+  it should "args parser test: invalid iteration count, zero number" in {
+    val parser = new ArgsParser()
+    parser.parse(
+      ("-i 0 " +
+        "-t 1 " +
+        "-ap 1.116,0.081,0.941,-0.880,0.817,0.573/0.856,0.406,-0.444,-0.267,1.463,-0.414/-0.066,0.917,0.803,-1.232,-0.490,-1.376/0.337,1.106,0.601,-0.953,-1.453,-0.750/0.106,0.711,-1.410,-1.431,1.277,-0.904 " +
+        "-f linear:0.4,spherical:0.3,sinusoidal:0.3").split(" ").toList
+    ).isLeft shouldBe true
+  }
+
+  it should "args parser test: invalid threads count, non-number" in {
     val parser = new ArgsParser()
     parser.parse(
       ("-t qwerty " +
@@ -89,7 +112,25 @@ class ArgsParserTest extends AnyFlatSpec with Matchers {
     ).isLeft shouldBe true
   }
 
-  it should "args parser test #5" in {
+  it should "args parser test: invalid threads count, negative number" in {
+    val parser = new ArgsParser()
+    parser.parse(
+      ("-t -1 " +
+        "-ap 1.116,0.081,0.941,-0.880,0.817,0.573/0.856,0.406,-0.444,-0.267,1.463,-0.414/-0.066,0.917,0.803,-1.232,-0.490,-1.376/0.337,1.106,0.601,-0.953,-1.453,-0.750/0.106,0.711,-1.410,-1.431,1.277,-0.904 " +
+        "-f linear:0.4,spherical:0.3,sinusoidal:0.3").split(" ").toList
+    ).isLeft shouldBe true
+  }
+
+  it should "args parser test: invalid threads count, zero number" in {
+    val parser = new ArgsParser()
+    parser.parse(
+      ("-t 0 " +
+        "-ap 1.116,0.081,0.941,-0.880,0.817,0.573/0.856,0.406,-0.444,-0.267,1.463,-0.414/-0.066,0.917,0.803,-1.232,-0.490,-1.376/0.337,1.106,0.601,-0.953,-1.453,-0.750/0.106,0.711,-1.410,-1.431,1.277,-0.904 " +
+        "-f linear:0.4,spherical:0.3,sinusoidal:0.3").split(" ").toList
+    ).isLeft shouldBe true
+  }
+
+  it should "args parser test: invalid affine params" in {
     val parser = new ArgsParser()
     parser.parse(
       ("-ap qwerty " +
@@ -97,17 +138,52 @@ class ArgsParserTest extends AnyFlatSpec with Matchers {
     ).isLeft shouldBe true
   }
 
-  it should "args parser test #6" in {
+  it should "args parser test: invalid functions" in {
     val parser = new ArgsParser()
     parser.parse("-f qwerrtyy".split(" ").toList).isLeft shouldBe true
   }
 
-  it should "args parser test #7" in {
+  it should "args parser test: invalid symmetry level, non-number" in {
+    val parser = new ArgsParser()
+    parser.parse("-s qwerty".split(" ").toList).isLeft shouldBe true
+  }
+
+  it should "args parser test: invalid symmetry level, negative number" in {
+    val parser = new ArgsParser()
+    parser.parse("-s -1".split(" ").toList).isLeft shouldBe true
+  }
+
+  it should "args parser test: invalid symmetry level, zero number" in {
+    val parser = new ArgsParser()
+    parser.parse("-s 0".split(" ").toList).isLeft shouldBe true
+  }
+
+  it should "args parser test: invalid gamma correction" in {
+    val parser = new ArgsParser()
+    parser.parse("-g qwerty".split(" ").toList).isLeft shouldBe true
+  }
+
+  it should "args parser test: invalid gamma, non-number" in {
+    val parser = new ArgsParser()
+    parser.parse("--gamma qwerty".split(" ").toList).isLeft shouldBe true
+  }
+
+  it should "args parser test: invalid gamma, negative number" in {
+    val parser = new ArgsParser()
+    parser.parse("--gamma -1.0".split(" ").toList).isLeft shouldBe true
+  }
+
+  it should "args parser test: invalid gamma, zero number" in {
+    val parser = new ArgsParser()
+    parser.parse("--gamma 0.0".split(" ").toList).isLeft shouldBe true
+  }
+
+  it should "args parser test: invalid command line format, no value provided" in {
     val parser = new ArgsParser()
     parser.parse("-f".split(" ").toList).isLeft shouldBe true
   }
 
-  it should "args parser test #8" in {
+  it should "args parser test: invalid command line format, no key provided" in {
     val parser = new ArgsParser()
     parser.parse("amogus".split(" ").toList).isLeft shouldBe true
   }
@@ -149,7 +225,10 @@ class ArgsParserTest extends AnyFlatSpec with Matchers {
         |      "e": 1.0,
         |      "f": 1.0
         |    }
-        |  ]
+        |  ],
+        |  "symmetry_level": 4,
+        |  "gamma_correction": true,
+        |  "gamma": 2.0
         |}"""
     JsonConfigArgsParser.parseJsonConfig(jsonConfig.stripMargin) shouldBe Right(OptionalProgramArguments(
       Some(1920),
@@ -160,9 +239,9 @@ class ArgsParserTest extends AnyFlatSpec with Matchers {
       Some(4),
       Some(List(AffineParams(1.0, 1.0, 1.0, 1.0, 1.0, 1.0), AffineParams(0.3, 1.0, -0.2, 0.4, 1.0, 1.0))),
       Some(List(WeightedFunction(1.0, "swirl"), WeightedFunction(0.7, "horseshoe"))),
-      None,
-      None,
-      None,
+      Some(4),
+      Some(true),
+      Some(2.0),
     ))
   }
 
@@ -190,6 +269,23 @@ class ArgsParserTest extends AnyFlatSpec with Matchers {
     val file         = new File(configSource.getPath).getAbsolutePath
 
     JsonConfigArgsParser.parse(Map("--config" -> file)).isLeft shouldBe true
+  }
+
+  it should "json config args parser test #4" in {
+    val configSource = getClass.getResource("/config_invalid.json")
+    val file         = new File(configSource.getPath).getAbsolutePath
+    val parser       = new ArgsParser()
+    parser.parse(
+      ("--seed 1234 " +
+        "-i 50000 " +
+        "-t 1 " +
+        "-ap 1.116,0.081,0.941,-0.880,0.817,0.573/0.856,0.406,-0.444,-0.267,1.463,-0.414/-0.066,0.917,0.803,-1.232,-0.490,-1.376/0.337,1.106,0.601,-0.953,-1.453,-0.750/0.106,0.711,-1.410,-1.431,1.277,-0.904 " +
+        "-f linear:0.4,spherical:0.3,sinusoidal:0.3 " +
+        "-s 4 " +
+        "-g true " +
+        "--gamma 2.0 " +
+        "--config " + file).split(" ").toList
+    ).isLeft shouldBe true
   }
 
   it should "affine params parser test #1" in {
@@ -246,9 +342,9 @@ class ArgsParserTest extends AnyFlatSpec with Matchers {
       Left(TestDomainError(5)),
       Left(TestDomainError(6)),
       Left(TestDomainError(7)),
-      Right(None),
-      Right(None),
-      Right(None),
+      Left(TestDomainError(8)),
+      Left(TestDomainError(9)),
+      Left(TestDomainError(10)),
     ).build() shouldBe Left(TestDomainError(1))
   }
 
@@ -262,9 +358,9 @@ class ArgsParserTest extends AnyFlatSpec with Matchers {
       Left(TestDomainError(5)),
       Left(TestDomainError(6)),
       Left(TestDomainError(7)),
-      Right(None),
-      Right(None),
-      Right(None),
+      Left(TestDomainError(8)),
+      Left(TestDomainError(9)),
+      Left(TestDomainError(10)),
     ).build() shouldBe Left(TestDomainError(2))
   }
 
@@ -278,9 +374,9 @@ class ArgsParserTest extends AnyFlatSpec with Matchers {
       Left(TestDomainError(5)),
       Left(TestDomainError(6)),
       Left(TestDomainError(7)),
-      Right(None),
-      Right(None),
-      Right(None),
+      Left(TestDomainError(8)),
+      Left(TestDomainError(9)),
+      Left(TestDomainError(10)),
     ).build() shouldBe Left(TestDomainError(3))
   }
 
@@ -294,9 +390,9 @@ class ArgsParserTest extends AnyFlatSpec with Matchers {
       Left(TestDomainError(5)),
       Left(TestDomainError(6)),
       Left(TestDomainError(7)),
-      Right(None),
-      Right(None),
-      Right(None),
+      Left(TestDomainError(8)),
+      Left(TestDomainError(9)),
+      Left(TestDomainError(10)),
     ).build() shouldBe Left(TestDomainError(4))
   }
 
@@ -310,9 +406,9 @@ class ArgsParserTest extends AnyFlatSpec with Matchers {
       Left(TestDomainError(5)),
       Left(TestDomainError(6)),
       Left(TestDomainError(7)),
-      Right(None),
-      Right(None),
-      Right(None),
+      Left(TestDomainError(8)),
+      Left(TestDomainError(9)),
+      Left(TestDomainError(10)),
     ).build() shouldBe Left(TestDomainError(5))
   }
 
@@ -326,9 +422,9 @@ class ArgsParserTest extends AnyFlatSpec with Matchers {
       Right(None),
       Left(TestDomainError(6)),
       Left(TestDomainError(7)),
-      Right(None),
-      Right(None),
-      Right(None),
+      Left(TestDomainError(8)),
+      Left(TestDomainError(9)),
+      Left(TestDomainError(10)),
     ).build() shouldBe Left(TestDomainError(6))
   }
 
@@ -342,13 +438,61 @@ class ArgsParserTest extends AnyFlatSpec with Matchers {
       Right(None),
       Right(None),
       Left(TestDomainError(7)),
-      Right(None),
-      Right(None),
-      Right(None),
+      Left(TestDomainError(8)),
+      Left(TestDomainError(9)),
+      Left(TestDomainError(10)),
     ).build() shouldBe Left(TestDomainError(7))
   }
 
   it should "result builder throws first error #8" in {
+    new ResultBuilder(
+      None,
+      Right(None),
+      Right(None),
+      Right(None),
+      Right(None),
+      Right(None),
+      Right(None),
+      Right(None),
+      Left(TestDomainError(8)),
+      Left(TestDomainError(9)),
+      Left(TestDomainError(10)),
+    ).build() shouldBe Left(TestDomainError(8))
+  }
+
+  it should "result builder throws first error #9" in {
+    new ResultBuilder(
+      None,
+      Right(None),
+      Right(None),
+      Right(None),
+      Right(None),
+      Right(None),
+      Right(None),
+      Right(None),
+      Right(None),
+      Left(TestDomainError(9)),
+      Left(TestDomainError(10)),
+    ).build() shouldBe Left(TestDomainError(9))
+  }
+
+  it should "result builder throws first error #10" in {
+    new ResultBuilder(
+      None,
+      Right(None),
+      Right(None),
+      Right(None),
+      Right(None),
+      Right(None),
+      Right(None),
+      Right(None),
+      Right(None),
+      Right(None),
+      Left(TestDomainError(10)),
+    ).build() shouldBe Left(TestDomainError(10))
+  }
+
+  it should "result builder throws first error #11" in {
     new ResultBuilder(
       None,
       Right(None),

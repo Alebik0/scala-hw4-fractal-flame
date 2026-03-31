@@ -109,7 +109,16 @@ class ResultBuilder(
     eitherSymmetryLevel match {
       case Left(error)               => Left(error)
       case Right(symmetryLevelValue) =>
-        build9(widthValue, heightValue, seedValue, iterationCountValue, threadsValue, affineParamsValue, functionsValue, symmetryLevelValue)
+        build9(
+          widthValue,
+          heightValue,
+          seedValue,
+          iterationCountValue,
+          threadsValue,
+          affineParamsValue,
+          functionsValue,
+          symmetryLevelValue
+        )
     }
   }
 
@@ -126,7 +135,17 @@ class ResultBuilder(
     eitherGammaCorrection match {
       case Left(error)                 => Left(error)
       case Right(gammaCorrectionValue) =>
-        build10(widthValue, heightValue, seedValue, iterationCountValue, threadsValue, affineParamsValue, functionsValue, symmetryLevelValue, gammaCorrectionValue)
+        build10(
+          widthValue,
+          heightValue,
+          seedValue,
+          iterationCountValue,
+          threadsValue,
+          affineParamsValue,
+          functionsValue,
+          symmetryLevelValue,
+          gammaCorrectionValue
+        )
     }
   }
 
@@ -144,21 +163,32 @@ class ResultBuilder(
     eitherGamma match {
       case Left(error)       => Left(error)
       case Right(gammaValue) =>
-        buildFinal(widthValue, heightValue, seedValue, iterationCountValue, threadsValue, affineParamsValue, functionsValue, symmetryLevelValue, gammaCorrectionValue, gammaValue)
+        buildFinal(
+          widthValue,
+          heightValue,
+          seedValue,
+          iterationCountValue,
+          threadsValue,
+          affineParamsValue,
+          functionsValue,
+          symmetryLevelValue,
+          gammaCorrectionValue,
+          gammaValue
+        )
     }
   }
 
   private def buildFinal(
-                          widthValue: Option[Int],
-                          heightValue: Option[Int],
-                          seedValue: Option[Long],
-                          iterationCountValue: Option[Int],
-                          threadsValue: Option[Int],
-                          affineParamsValue: Option[List[AffineParams]],
-                          functionsValue: Option[List[WeightedFunction]],
-                          symmetryLevelValue: Option[Int],
-                          gammaCorrectionValue: Option[Boolean],
-                          gammaValue: Option[Double],
+      widthValue: Option[Int],
+      heightValue: Option[Int],
+      seedValue: Option[Long],
+      iterationCountValue: Option[Int],
+      threadsValue: Option[Int],
+      affineParamsValue: Option[List[AffineParams]],
+      functionsValue: Option[List[WeightedFunction]],
+      symmetryLevelValue: Option[Int],
+      gammaCorrectionValue: Option[Boolean],
+      gammaValue: Option[Double],
   ): Either[DomainError, OptionalProgramArguments] = {
     Right(
       OptionalProgramArguments(

@@ -46,7 +46,16 @@ class ChaosGame(
 
   private def task(threadIndex: Int): Future[Either[DomainError, ImageData]] = Future {
     val thread =
-      new ChaosGameThread(width, height, zoom, seed + threadIndex, iterationCount / threads, affineParams, functions, symmetryLevel)
+      new ChaosGameThread(
+        width,
+        height,
+        zoom,
+        seed + threadIndex,
+        iterationCount / threads,
+        affineParams,
+        functions,
+        symmetryLevel
+      )
     thread.render()
   }
 }
