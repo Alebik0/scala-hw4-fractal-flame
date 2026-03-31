@@ -15,7 +15,8 @@ class ChaosGameThread(
     seed: Long,
     iterationCount: Int,
     affineParams: List[ColoredAffineParams],
-    functions: List[WeightedVariationFunction]
+    functions: List[WeightedVariationFunction],
+    symmetryLevel: Int
 ) {
   private val logger: Logger = LogManager.getLogger(getClass)
 
@@ -79,19 +80,43 @@ class ChaosGameThread(
         if (step >= iterationCount)
           Right(acc)
         else if (step >= 0) {
-          val x       = width / 2 + (nextPoint.x * zoom * math.min(width, height) / 2).toInt
-          val y       = height / 2 + (nextPoint.y * zoom * math.min(width, height) / 2).toInt
-          val hitData = HitData(
-            imageX = x,
-            imageY = y,
-            red = affineParams.red,
-            green = affineParams.green,
-            blue = affineParams.blue
-          )
+          val hits = symmetryPoints(nextPoint)
+            .map(
+              p => {
+                val (x, y) = pointToImage(p)
+                HitData(
+                  imageX = x,
+                  imageY = y,
+                  red = affineParams.red,
+                  green = affineParams.green,
+                  blue = affineParams.blue
+                )
+              }
+            )
 
-          pointsHit(nextPoint, step + 1, acc :+ hitData)
+          pointsHit(nextPoint, step + 1, acc :++ hits)
         } else
           pointsHit(nextPoint, step + 1, acc)
     }
+  }
+
+  private def symmetryPoints(point: Point): List[Point] = {
+    val angle = 2.0 * math.Pi / symmetryLevel
+    (0 until symmetryLevel)
+      .map(
+        alpha =>
+          Point(
+            point.x * math.cos(angle * alpha) - point.y * math.sin(angle * alpha),
+            point.x * math.sin(angle * alpha) + point.y * math.cos(angle * alpha)
+          )
+      )
+      .toList
+  }
+
+  private def pointToImage(p: Point): (Int, Int) = {
+    val x = width / 2 + (p.x * zoom * math.min(width, height) / 2).toInt
+    val y = height / 2 + (p.y * zoom * math.min(width, height) / 2).toInt
+
+    (x, y)
   }
 }

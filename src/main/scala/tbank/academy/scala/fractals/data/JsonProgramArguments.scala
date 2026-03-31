@@ -8,4 +8,5 @@ case class JsonProgramArguments(
     threads: Option[Int],
     affine_params: Option[List[AffineParams]],
     functions: Option[List[WeightedFunction]],
+    symmetry_level: Option[Int],
 )

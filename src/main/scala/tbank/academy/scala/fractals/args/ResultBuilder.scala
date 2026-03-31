@@ -11,7 +11,8 @@ class ResultBuilder(
     eitherIterationCountValue: Either[DomainError, Option[Int]],
     eitherThreadsValue: Either[DomainError, Option[Int]],
     eitherAffineParamsValue: Either[DomainError, Option[List[AffineParams]]],
-    eitherFunctionsValue: Either[DomainError, Option[List[WeightedFunction]]]
+    eitherFunctionsValue: Either[DomainError, Option[List[WeightedFunction]]],
+    eitherSymmetryLevel: Either[DomainError, Option[Int]]
 ) {
   def build(): Either[DomainError, OptionalProgramArguments] = {
     eitherWidthValue match {
@@ -102,7 +103,24 @@ class ResultBuilder(
       threadsValue: Option[Int],
       affineParamsValue: Option[List[AffineParams]],
       functionsValue: Option[List[WeightedFunction]]
-  ): Right[Nothing, OptionalProgramArguments] = {
+  ): Either[DomainError, OptionalProgramArguments] = {
+    eitherSymmetryLevel match {
+      case Left(error)           => Left(error)
+      case Right(symmetryValue) =>
+        build9(widthValue, heightValue, seedValue, iterationCountValue, threadsValue, affineParamsValue, functionsValue, symmetryValue)
+    }
+  }
+
+  private def build9(
+      widthValue: Option[Int],
+      heightValue: Option[Int],
+      seedValue: Option[Long],
+      iterationCountValue: Option[Int],
+      threadsValue: Option[Int],
+      affineParamsValue: Option[List[AffineParams]],
+      functionsValue: Option[List[WeightedFunction]],
+      symmetryValue: Option[Int],
+  ): Either[DomainError, OptionalProgramArguments] = {
     Right(
       OptionalProgramArguments(
         width = widthValue,
@@ -113,6 +131,7 @@ class ResultBuilder(
         threads = threadsValue,
         affineParams = affineParamsValue,
         functions = functionsValue,
+        symmetryValue
       )
     )
   }

@@ -40,7 +40,8 @@ object FractalFlame {
         random.nextInt(255),
         random.nextInt(255)
       )),
-      functions = programArguments.functions.map(makeVariation)
+      functions = programArguments.functions.map(makeVariation),
+      symmetryLevel = programArguments.symmetryLevel,
     )
 
     logger.info("Rendering image")

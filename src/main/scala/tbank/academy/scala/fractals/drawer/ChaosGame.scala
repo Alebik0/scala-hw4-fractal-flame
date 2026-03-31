@@ -16,7 +16,8 @@ class ChaosGame(
     threads: Int,
     iterationCount: Int,
     affineParams: List[ColoredAffineParams],
-    functions: List[WeightedVariationFunction]
+    functions: List[WeightedVariationFunction],
+    symmetryLevel: Int
 ) {
   private val logger: Logger = LogManager.getLogger(getClass)
 
@@ -45,7 +46,7 @@ class ChaosGame(
 
   private def task(threadIndex: Int): Future[Either[DomainError, ImageData]] = Future {
     val thread =
-      new ChaosGameThread(width, height, zoom, seed + threadIndex, iterationCount / threads, affineParams, functions)
+      new ChaosGameThread(width, height, zoom, seed + threadIndex, iterationCount / threads, affineParams, functions, symmetryLevel)
     thread.render()
   }
 }

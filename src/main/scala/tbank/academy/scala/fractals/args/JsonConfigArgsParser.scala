@@ -37,7 +37,8 @@ object JsonConfigArgsParser {
           outputPath = value.output_path,
           threads = value.threads,
           affineParams = value.affine_params,
-          functions = value.functions
+          functions = value.functions,
+          symmetryLevel = value.symmetry_level
         ))
     }
 }

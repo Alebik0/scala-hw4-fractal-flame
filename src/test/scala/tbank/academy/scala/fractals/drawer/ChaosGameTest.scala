@@ -14,7 +14,7 @@ class ChaosGameTest extends AnyFlatSpec with Matchers {
     val functions = List(
       WeightedVariationFunction(1.0, LinearVariationFunction)
     )
-    val chaosGame = new ChaosGameThread(2000, 1000, 1.0, 1234, 5, affineParams, functions)
+    val chaosGame = new ChaosGameThread(2000, 1000, 1.0, 1234, 5, affineParams, functions, symmetryLevel = 1)
     chaosGame.pointsHit(Point(0.0, 0.0), step = 0, acc = List()) shouldBe Right(List(
       HitData(1050, 600, 0, 0, 0),
       HitData(1050, 600, 0, 0, 0),
@@ -31,7 +31,7 @@ class ChaosGameTest extends AnyFlatSpec with Matchers {
     val functions = List(
       WeightedVariationFunction(1.0, LinearVariationFunction)
     )
-    val chaosGame = new ChaosGameThread(2000, 1000, 1.0, 1234, 5, affineParams, functions)
+    val chaosGame = new ChaosGameThread(2000, 1000, 1.0, 1234, 5, affineParams, functions, symmetryLevel = 1)
     chaosGame.pointsHit(Point(0.0, 0.0), step = 0, acc = List()) shouldBe Right(List(
       HitData(1050, 500, 0, 0, 0),
       HitData(1100, 500, 0, 0, 0),
@@ -48,7 +48,7 @@ class ChaosGameTest extends AnyFlatSpec with Matchers {
     val functions = List(
       WeightedVariationFunction(1.0, LinearVariationFunction)
     )
-    val chaosGame = new ChaosGameThread(2000, 1000, 1.0, 1234, 5, affineParams, functions)
+    val chaosGame = new ChaosGameThread(2000, 1000, 1.0, 1234, 5, affineParams, functions, symmetryLevel = 1)
     val localHits = List(
       HitData(100, 100, 255, 0, 0),
       HitData(100, 100, 0, 255, 0),
@@ -64,7 +64,7 @@ class ChaosGameTest extends AnyFlatSpec with Matchers {
     val functions = List(
       WeightedVariationFunction(1.0, LinearVariationFunction)
     )
-    val chaosGame = new ChaosGameThread(2000, 1000, 1.0, 1234, 5, affineParams, functions)
+    val chaosGame = new ChaosGameThread(2000, 1000, 1.0, 1234, 5, affineParams, functions, symmetryLevel = 1)
     val localHits =
       List(
       )
@@ -78,7 +78,7 @@ class ChaosGameTest extends AnyFlatSpec with Matchers {
     val functions = List(
       WeightedVariationFunction(1.0, LinearVariationFunction)
     )
-    val chaosGame = new ChaosGameThread(2000, 1000, 1.0, 1234, 5, affineParams, functions)
+    val chaosGame = new ChaosGameThread(2000, 1000, 1.0, 1234, 5, affineParams, functions, symmetryLevel = 1)
     val localHits = List(
       HitData(100, 100, 255, 0, 0),
     )
@@ -92,7 +92,7 @@ class ChaosGameTest extends AnyFlatSpec with Matchers {
     val functions = List(
       WeightedVariationFunction(1.0, LinearVariationFunction)
     )
-    val chaosGame = new ChaosGameThread(5, 3, 1.0, 1234, 1000, affineParams, functions)
+    val chaosGame = new ChaosGameThread(5, 3, 1.0, 1234, 1000, affineParams, functions, symmetryLevel = 1)
 
     chaosGame.render() shouldBe Right(ImageData(
       pixels = List(

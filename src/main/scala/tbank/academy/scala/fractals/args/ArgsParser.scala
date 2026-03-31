@@ -18,7 +18,8 @@ class ArgsParser {
       outputPath = "result.png",
       threads = 1,
       affineParams = List(),
-      functions = List()
+      functions = List(),
+      symmetryLevel = 1
     )
 
   def parse(args: List[String]): Either[DomainError, ProgramArguments] = {

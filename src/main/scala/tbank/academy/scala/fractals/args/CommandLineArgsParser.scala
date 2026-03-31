@@ -18,6 +18,7 @@ object CommandLineArgsParser {
     val eitherThreadsValue        = parseThreads(argsMap)
     val eitherAffineParamsValue   = parseAffineParams(argsMap)
     val eitherFunctionsValue      = parseFunctions(argsMap)
+    val eitherSymmetryLevelValue  = parseSymmetryLevel(argsMap)
     val builder                   = new ResultBuilder(
       outputPathValue,
       eitherWidthValue,
@@ -26,13 +27,14 @@ object CommandLineArgsParser {
       eitherIterationCountValue,
       eitherThreadsValue,
       eitherAffineParamsValue,
-      eitherFunctionsValue
+      eitherFunctionsValue,
+      eitherSymmetryLevelValue
     )
 
     builder.build()
   }
 
-  private def parseIntArg(
+  private def parsePositiveIntArg(
       argsMap: Map[String, String],
       arg1: String,
       arg2: String
@@ -40,7 +42,11 @@ object CommandLineArgsParser {
     argsMap.get(arg1).orElse(argsMap.get(arg2)) match {
       case Some(it) =>
         it.toIntOption match {
-          case Some(value) => Right(Some(value))
+          case Some(value) =>
+            if (value > 0)
+              Right(Some(value))
+            else
+              Left(InvalidArgsError(s"$arg1 or $arg2: negative integer provided"))
           case None        => Left(InvalidArgsError(s"$arg1 or $arg2"))
         }
       case None => Right(None)
@@ -51,10 +57,10 @@ object CommandLineArgsParser {
     argsMap.get("--output").orElse(argsMap.get("-o"))
 
   private def parseWidth(argsMap: Map[String, String]): Either[DomainError, Option[Int]] =
-    parseIntArg(argsMap, "--width", "-w")
+    parsePositiveIntArg(argsMap, "--width", "-w")
 
   private def parseHeight(argsMap: Map[String, String]): Either[DomainError, Option[Int]] =
-    parseIntArg(argsMap, "--height", "-h")
+    parsePositiveIntArg(argsMap, "--height", "-h")
 
   private def parseSeedValue(argsMap: Map[String, String]): Either[DomainError, Option[Long]] =
     argsMap.get("--seed") match {
@@ -67,10 +73,10 @@ object CommandLineArgsParser {
     }
 
   private def parseIterationCount(argsMap: Map[String, String]): Either[DomainError, Option[Int]] =
-    parseIntArg(argsMap, "--iteration-count", "-i")
+    parsePositiveIntArg(argsMap, "--iteration-count", "-i")
 
   private def parseThreads(argsMap: Map[String, String]): Either[DomainError, Option[Int]] =
-    parseIntArg(argsMap, "--threads", "-t")
+    parsePositiveIntArg(argsMap, "--threads", "-t")
 
   private def parseAffineParams(argsMap: Map[String, String]): Either[DomainError, Option[List[AffineParams]]] = {
     argsMap.get("--affine-params").orElse(argsMap.get("-ap")) match {
@@ -106,4 +112,6 @@ object CommandLineArgsParser {
     }
   }
 
+  private def parseSymmetryLevel(argsMap: Map[String, String]): Either[DomainError, Option[Int]] =
+    parsePositiveIntArg(argsMap, "--symmetry-level", "-s")
 }
