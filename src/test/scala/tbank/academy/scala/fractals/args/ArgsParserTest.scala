@@ -20,7 +20,9 @@ class ArgsParserTest extends AnyFlatSpec with Matchers {
       threads = 1,
       affineParams = List(),
       functions = List(),
-      symmetryLevel = 1
+      symmetryLevel = 1,
+      gammaCorrection = false,
+      gamma = 2.2
     ))
   }
 
@@ -51,7 +53,9 @@ class ArgsParserTest extends AnyFlatSpec with Matchers {
         WeightedFunction(0.3, "spherical"),
         WeightedFunction(0.3, "sinusoidal"),
       ),
-      1
+      1,
+      gammaCorrection = false,
+      2.2
     ))
   }
 
@@ -156,7 +160,9 @@ class ArgsParserTest extends AnyFlatSpec with Matchers {
       Some(4),
       Some(List(AffineParams(1.0, 1.0, 1.0, 1.0, 1.0, 1.0), AffineParams(0.3, 1.0, -0.2, 0.4, 1.0, 1.0))),
       Some(List(WeightedFunction(1.0, "swirl"), WeightedFunction(0.7, "horseshoe"))),
-      None
+      None,
+      None,
+      None,
     ))
   }
 
@@ -173,7 +179,9 @@ class ArgsParserTest extends AnyFlatSpec with Matchers {
       Some(4),
       Some(List(AffineParams(1.0, 1.0, 1.0, 1.0, 1.0, 1.0), AffineParams(0.3, 1.0, -0.2, 0.4, 1.0, 1.0))),
       Some(List(WeightedFunction(1.0, "swirl"), WeightedFunction(0.7, "horseshoe"))),
-      None
+      None,
+      None,
+      None,
     ))
   }
 
@@ -238,7 +246,9 @@ class ArgsParserTest extends AnyFlatSpec with Matchers {
       Left(TestDomainError(5)),
       Left(TestDomainError(6)),
       Left(TestDomainError(7)),
-      Right(None)
+      Right(None),
+      Right(None),
+      Right(None),
     ).build() shouldBe Left(TestDomainError(1))
   }
 
@@ -252,7 +262,9 @@ class ArgsParserTest extends AnyFlatSpec with Matchers {
       Left(TestDomainError(5)),
       Left(TestDomainError(6)),
       Left(TestDomainError(7)),
-      Right(None)
+      Right(None),
+      Right(None),
+      Right(None),
     ).build() shouldBe Left(TestDomainError(2))
   }
 
@@ -266,7 +278,9 @@ class ArgsParserTest extends AnyFlatSpec with Matchers {
       Left(TestDomainError(5)),
       Left(TestDomainError(6)),
       Left(TestDomainError(7)),
-      Right(None)
+      Right(None),
+      Right(None),
+      Right(None),
     ).build() shouldBe Left(TestDomainError(3))
   }
 
@@ -280,7 +294,9 @@ class ArgsParserTest extends AnyFlatSpec with Matchers {
       Left(TestDomainError(5)),
       Left(TestDomainError(6)),
       Left(TestDomainError(7)),
-      Right(None)
+      Right(None),
+      Right(None),
+      Right(None),
     ).build() shouldBe Left(TestDomainError(4))
   }
 
@@ -294,7 +310,9 @@ class ArgsParserTest extends AnyFlatSpec with Matchers {
       Left(TestDomainError(5)),
       Left(TestDomainError(6)),
       Left(TestDomainError(7)),
-      Right(None)
+      Right(None),
+      Right(None),
+      Right(None),
     ).build() shouldBe Left(TestDomainError(5))
   }
 
@@ -308,7 +326,9 @@ class ArgsParserTest extends AnyFlatSpec with Matchers {
       Right(None),
       Left(TestDomainError(6)),
       Left(TestDomainError(7)),
-      Right(None)
+      Right(None),
+      Right(None),
+      Right(None),
     ).build() shouldBe Left(TestDomainError(6))
   }
 
@@ -322,7 +342,9 @@ class ArgsParserTest extends AnyFlatSpec with Matchers {
       Right(None),
       Right(None),
       Left(TestDomainError(7)),
-      Right(None)
+      Right(None),
+      Right(None),
+      Right(None),
     ).build() shouldBe Left(TestDomainError(7))
   }
 
@@ -336,8 +358,10 @@ class ArgsParserTest extends AnyFlatSpec with Matchers {
       Right(None),
       Right(None),
       Right(None),
-      Right(None)
-    ).build() shouldBe Right(OptionalProgramArguments(None, None, None, None, None, None, None, None, None))
+      Right(None),
+      Right(None),
+      Right(None),
+    ).build() shouldBe Right(OptionalProgramArguments(None, None, None, None, None, None, None, None, None, None, None))
   }
 }
 

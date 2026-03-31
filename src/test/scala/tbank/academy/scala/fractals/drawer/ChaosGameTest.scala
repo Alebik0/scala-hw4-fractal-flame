@@ -50,11 +50,11 @@ class ChaosGameTest extends AnyFlatSpec with Matchers {
     )
     val chaosGame = new ChaosGameThread(2000, 1000, 1.0, 1234, 5, affineParams, functions, symmetryLevel = 1)
     val localHits = List(
-      HitData(100, 100, 255, 0, 0),
-      HitData(100, 100, 0, 255, 0),
-      HitData(100, 100, 0, 0, 255),
+      HitData(100, 100, 1.0, 0, 0),
+      HitData(100, 100, 0, 1.0, 0),
+      HitData(100, 100, 0, 0, 1.0),
     )
-    chaosGame.makePixel(localHits) shouldBe PixelData(63, 63, 127, 255, 3)
+    chaosGame.makePixel(localHits) shouldBe PixelData(0.25, 0.25, 0.5, 1.0, 3)
   }
 
   it should "makePixel test #2" in {
@@ -68,7 +68,7 @@ class ChaosGameTest extends AnyFlatSpec with Matchers {
     val localHits =
       List(
       )
-    chaosGame.makePixel(localHits) shouldBe PixelData(0, 0, 0, 255, 0)
+    chaosGame.makePixel(localHits) shouldBe PixelData(0, 0, 0, 1.0, 0)
   }
 
   it should "makePixel test #3" in {
@@ -80,14 +80,14 @@ class ChaosGameTest extends AnyFlatSpec with Matchers {
     )
     val chaosGame = new ChaosGameThread(2000, 1000, 1.0, 1234, 5, affineParams, functions, symmetryLevel = 1)
     val localHits = List(
-      HitData(100, 100, 255, 0, 0),
+      HitData(100, 100, 1.0, 0, 0),
     )
-    chaosGame.makePixel(localHits) shouldBe PixelData(255, 0, 0, 255, 1)
+    chaosGame.makePixel(localHits) shouldBe PixelData(1.0, 0, 0, 1.0, 1)
   }
 
   it should "render test" in {
     val affineParams = List(
-      ColoredAffineParams(AffineParams(0.0, 0.0, 1.0, 0.0, 0.0, 0.0), 255, 0, 0)
+      ColoredAffineParams(AffineParams(0.0, 0.0, 1.0, 0.0, 0.0, 0.0), 1.0, 0, 0)
     )
     val functions = List(
       WeightedVariationFunction(1.0, LinearVariationFunction)
@@ -97,25 +97,25 @@ class ChaosGameTest extends AnyFlatSpec with Matchers {
     chaosGame.render() shouldBe Right(ImageData(
       pixels = List(
         List(
-          PixelData(0, 0, 0, 255, 0),
-          PixelData(0, 0, 0, 255, 0),
-          PixelData(0, 0, 0, 255, 0),
-          PixelData(0, 0, 0, 255, 0),
-          PixelData(0, 0, 0, 255, 0)
+          PixelData(0, 0, 0, 1.0, 0),
+          PixelData(0, 0, 0, 1.0, 0),
+          PixelData(0, 0, 0, 1.0, 0),
+          PixelData(0, 0, 0, 1.0, 0),
+          PixelData(0, 0, 0, 1.0, 0)
         ),
         List(
-          PixelData(0, 0, 0, 255, 0),
-          PixelData(0, 0, 0, 255, 0),
-          PixelData(0, 0, 0, 255, 0),
-          PixelData(255, 0, 0, 255, 1000),
-          PixelData(0, 0, 0, 255, 0)
+          PixelData(0, 0, 0, 1.0, 0),
+          PixelData(0, 0, 0, 1.0, 0),
+          PixelData(0, 0, 0, 1.0, 0),
+          PixelData(1.0, 0, 0, 1.0, 1000),
+          PixelData(0, 0, 0, 1.0, 0)
         ),
         List(
-          PixelData(0, 0, 0, 255, 0),
-          PixelData(0, 0, 0, 255, 0),
-          PixelData(0, 0, 0, 255, 0),
-          PixelData(0, 0, 0, 255, 0),
-          PixelData(0, 0, 0, 255, 0)
+          PixelData(0, 0, 0, 1.0, 0),
+          PixelData(0, 0, 0, 1.0, 0),
+          PixelData(0, 0, 0, 1.0, 0),
+          PixelData(0, 0, 0, 1.0, 0),
+          PixelData(0, 0, 0, 1.0, 0)
         ),
       ),
       width = 5,
