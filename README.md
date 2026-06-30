@@ -246,3 +246,188 @@ sbt "run --config config.json"
 ├── build.sbt       - конфигурация проекта
 └── README.md       - Условия ДЗ
 ```
+
+---
+
+# Выполнено
+
+- [x] Запуск в однопоточном режиме
+- [x] Запуск в многопоточном режиме
+- [x] +10 бонусных баллов, если реализуете 5 и более трансформаций;
+- [x] +10 бонусных баллов, если реализуете поддержку логарифмической гамма-коррекции
+- [x] +10 бонусных баллов, если вы добавите поддержку симметрии в генерации пламени
+- [ ] +10 бонусных баллов, если вы поделитесь вашим результатом в чате группы и вам поставят лайк ( I cannot :( )
+
+## Тестирование
+
+* `ArgsParserTest` - тестирует парсинг аргументов коммандной строки
+* `ChaosGameTest` - проверяет алгоритм Chaos Game. А именно какие точки посещаются при разных вводных значениях.
+* `VariationFunctionTest` - проверяет каждую трансформацию
+* `ImageDrawerTest` - два теста, которые проверяют сохранение изображения. Что оно правильно рисует данные (тест 1) и то, что правильно обрабатывает ошибки записи (тест 2, который закомменчен из-за проблем с линтером)
+
+## Сравнение времени исполнения (по логам)
+
+Аргументы, с которыми вызывалась программа
+
+```bash
+--seed 1234
+-i 200000
+-t N
+-ap 1.116,0.081,0.941,-0.880,0.817,0.573/0.856,0.406,-0.444,-0.267,1.463,-0.414/-0.066,0.917,0.803,-1.232,-0.490,-1.376/0.337,1.106,0.601,-0.953,-1.453,-0.750/0.106,0.711,-1.410,-1.431,1.277,-0.904
+-f linear:0.4,spherical:0.3,sinusoidal:0.3
+```
+
+### Логи однопоточного режима (N = 1)
+
+```
+17:09:41.744 [main] INFO  tbank.academy.scala.fractals.args.ArgsParser - Parsing arguments
+17:09:41.753 [main] INFO  tbank.academy.scala.fractals.args.CommandLineArgsParser$ - Parsing command line arguments
+17:09:41.768 [main] DEBUG tbank.academy.scala.fractals.FractalFlame$ - Running with arguments: ProgramArguments(1920,1080,1234,200000,result2.png,1,List(AffineParams(1.116,0.081,0.941,-0.88,0.817,0.573), AffineParams(0.856,0.406,-0.444,-0.267,1.463,-0.414), AffineParams(-0.066,0.917,0.803,-1.232,-0.49,-1.376), AffineParams(0.337,1.106,0.601,-0.953,-1.453,-0.75), AffineParams(0.106,0.711,-1.41,-1.431,1.277,-0.904)),List(WeightedFunction(0.4,linear), WeightedFunction(0.3,spherical), WeightedFunction(0.3,sinusoidal)))
+17:09:41.772 [main] INFO  tbank.academy.scala.fractals.FractalFlame$ - Rendering image
+17:09:41.772 [main] INFO  tbank.academy.scala.fractals.drawer.ChaosGame - Creating threads
+17:09:41.788 [scala-execution-context-global-41] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Calculating point hits
+17:09:41.788 [main] INFO  tbank.academy.scala.fractals.drawer.ChaosGame - Awaiting threads
+17:10:50.281 [scala-execution-context-global-41] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Loaded 200000 hits
+17:10:50.357 [scala-execution-context-global-41] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Rendering pixels
+17:10:50.499 [main] INFO  tbank.academy.scala.fractals.drawer.ChaosGame - Got results
+17:10:50.586 [main] INFO  tbank.academy.scala.fractals.FractalFlame$ - Rendering image completed
+17:10:50.586 [main] INFO  tbank.academy.scala.fractals.FractalFlame$ - Drawing image
+17:10:50.587 [main] DEBUG tbank.academy.scala.fractals.image.ImageDrawer - Preparing image to save with size: 1920x1080
+17:10:50.663 [main] INFO  tbank.academy.scala.fractals.image.ImageDrawer - Saving image
+17:10:50.728 [main] INFO  tbank.academy.scala.fractals.FractalFlame$ - Drawing image completed
+```
+
+Общее время: 1 минута 9 секунд
+
+### Логи многопоточного режима (N = 20)
+
+```
+17:15:33.008 [main] INFO  tbank.academy.scala.fractals.args.ArgsParser - Parsing arguments
+17:15:33.017 [main] INFO  tbank.academy.scala.fractals.args.CommandLineArgsParser$ - Parsing command line arguments
+17:15:33.030 [main] DEBUG tbank.academy.scala.fractals.FractalFlame$ - Running with arguments: ProgramArguments(1920,1080,1234,200000,result1.png,20,List(AffineParams(1.116,0.081,0.941,-0.88,0.817,0.573), AffineParams(0.856,0.406,-0.444,-0.267,1.463,-0.414), AffineParams(-0.066,0.917,0.803,-1.232,-0.49,-1.376), AffineParams(0.337,1.106,0.601,-0.953,-1.453,-0.75), AffineParams(0.106,0.711,-1.41,-1.431,1.277,-0.904)),List(WeightedFunction(0.4,linear), WeightedFunction(0.3,spherical), WeightedFunction(0.3,sinusoidal)))
+17:15:33.033 [main] INFO  tbank.academy.scala.fractals.FractalFlame$ - Rendering image
+17:15:33.033 [main] INFO  tbank.academy.scala.fractals.drawer.ChaosGame - Creating threads
+17:15:33.047 [scala-execution-context-global-46] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Calculating point hits
+17:15:33.047 [scala-execution-context-global-44] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Calculating point hits
+17:15:33.047 [scala-execution-context-global-45] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Calculating point hits
+17:15:33.047 [scala-execution-context-global-41] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Calculating point hits
+17:15:33.047 [scala-execution-context-global-47] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Calculating point hits
+17:15:33.047 [scala-execution-context-global-42] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Calculating point hits
+17:15:33.048 [scala-execution-context-global-48] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Calculating point hits
+17:15:33.047 [scala-execution-context-global-43] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Calculating point hits
+17:15:33.048 [scala-execution-context-global-49] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Calculating point hits
+17:15:33.048 [scala-execution-context-global-50] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Calculating point hits
+17:15:33.048 [main] INFO  tbank.academy.scala.fractals.drawer.ChaosGame - Awaiting threads
+17:15:33.048 [scala-execution-context-global-51] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Calculating point hits
+17:15:33.048 [scala-execution-context-global-52] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Calculating point hits
+17:15:33.049 [scala-execution-context-global-53] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Calculating point hits
+17:15:33.049 [scala-execution-context-global-54] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Calculating point hits
+17:15:33.049 [scala-execution-context-global-55] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Calculating point hits
+17:15:33.049 [scala-execution-context-global-56] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Calculating point hits
+17:15:34.312 [scala-execution-context-global-54] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Loaded 10000 hits
+17:15:34.332 [scala-execution-context-global-44] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Loaded 10000 hits
+17:15:34.383 [scala-execution-context-global-54] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Rendering pixels
+17:15:34.401 [scala-execution-context-global-44] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Rendering pixels
+17:15:34.412 [scala-execution-context-global-46] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Loaded 10000 hits
+17:15:34.427 [scala-execution-context-global-56] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Loaded 10000 hits
+17:15:34.442 [scala-execution-context-global-46] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Rendering pixels
+17:15:34.459 [scala-execution-context-global-56] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Rendering pixels
+17:15:34.474 [scala-execution-context-global-51] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Loaded 10000 hits
+17:15:34.475 [scala-execution-context-global-41] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Loaded 10000 hits
+17:15:34.491 [scala-execution-context-global-51] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Rendering pixels
+17:15:34.491 [scala-execution-context-global-41] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Rendering pixels
+17:15:34.503 [scala-execution-context-global-42] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Loaded 10000 hits
+17:15:34.519 [scala-execution-context-global-42] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Rendering pixels
+17:15:34.582 [scala-execution-context-global-53] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Loaded 10000 hits
+17:15:34.656 [scala-execution-context-global-53] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Rendering pixels
+17:15:34.728 [scala-execution-context-global-52] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Loaded 10000 hits
+17:15:34.749 [scala-execution-context-global-55] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Loaded 10000 hits
+17:15:34.757 [scala-execution-context-global-45] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Loaded 10000 hits
+17:15:34.760 [scala-execution-context-global-52] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Rendering pixels
+17:15:34.828 [scala-execution-context-global-55] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Rendering pixels
+17:15:34.828 [scala-execution-context-global-45] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Rendering pixels
+17:15:34.830 [scala-execution-context-global-47] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Loaded 10000 hits
+17:15:34.840 [scala-execution-context-global-48] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Loaded 10000 hits
+17:15:34.845 [scala-execution-context-global-43] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Loaded 10000 hits
+17:15:34.847 [scala-execution-context-global-47] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Rendering pixels
+17:15:34.857 [scala-execution-context-global-48] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Rendering pixels
+17:15:34.858 [scala-execution-context-global-50] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Loaded 10000 hits
+17:15:34.860 [scala-execution-context-global-43] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Rendering pixels
+17:15:34.872 [scala-execution-context-global-50] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Rendering pixels
+17:15:35.211 [scala-execution-context-global-49] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Loaded 10000 hits
+17:15:35.217 [scala-execution-context-global-44] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Calculating point hits
+17:15:35.217 [scala-execution-context-global-54] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Calculating point hits
+17:15:35.304 [scala-execution-context-global-49] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Rendering pixels
+17:15:35.325 [scala-execution-context-global-41] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Calculating point hits
+17:15:35.371 [scala-execution-context-global-46] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Calculating point hits
+17:15:36.104 [scala-execution-context-global-44] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Loaded 10000 hits
+17:15:36.108 [scala-execution-context-global-44] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Rendering pixels
+17:15:36.110 [scala-execution-context-global-54] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Loaded 10000 hits
+17:15:36.113 [scala-execution-context-global-54] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Rendering pixels
+17:15:36.130 [scala-execution-context-global-41] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Loaded 10000 hits
+17:15:36.133 [scala-execution-context-global-41] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Rendering pixels
+17:15:36.153 [scala-execution-context-global-46] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Loaded 10000 hits
+17:15:36.156 [scala-execution-context-global-46] INFO  tbank.academy.scala.fractals.drawer.ChaosGameThread - Rendering pixels
+17:15:36.310 [main] INFO  tbank.academy.scala.fractals.drawer.ChaosGame - Got results
+17:15:37.122 [main] INFO  tbank.academy.scala.fractals.FractalFlame$ - Rendering image completed
+17:15:37.122 [main] INFO  tbank.academy.scala.fractals.FractalFlame$ - Drawing image
+17:15:37.123 [main] DEBUG tbank.academy.scala.fractals.image.ImageDrawer - Preparing image to save with size: 1920x1080
+17:15:37.196 [main] INFO  tbank.academy.scala.fractals.image.ImageDrawer - Saving image
+17:15:37.266 [main] INFO  tbank.academy.scala.fractals.FractalFlame$ - Drawing image completed
+```
+
+Общее время: 4 секунды
+
+## Результат этого выполнения
+
+### Обычный запуск
+
+![Result example](./examples/200000_points.png)
+
+### Symmetry level example
+
+Аргументы, с которыми вызывалась программа
+
+```bash
+--seed 1234
+-i 200000
+-t 20
+-ap 1.116,0.081,0.941,-0.880,0.817,0.573/0.856,0.406,-0.444,-0.267,1.463,-0.414/-0.066,0.917,0.803,-1.232,-0.490,-1.376/0.337,1.106,0.601,-0.953,-1.453,-0.750/0.106,0.711,-1.410,-1.431,1.277,-0.904
+-f linear:0.4,spherical:0.3,sinusoidal:0.3
+-s 4
+```
+
+Результат
+
+![Result example 2](./examples/symmetry_level.png)
+
+### Gamma correction example
+
+Аргументы, с которыми вызывалась программа
+
+```bash
+--seed 1234
+-i 200000
+-t 20
+-ap 1.116,0.081,0.941,-0.880,0.817,0.573/0.856,0.406,-0.444,-0.267,1.463,-0.414/-0.066,0.917,0.803,-1.232,-0.490,-1.376/0.337,1.106,0.601,-0.953,-1.453,-0.750/0.106,0.711,-1.410,-1.431,1.277,-0.904
+-f linear:0.4,spherical:0.3,sinusoidal:0.3
+-s 4
+-g true
+--gamma 2.2
+```
+
+Результат
+
+![Result example 3](./examples/gamma_correction.png)
+
+### Test coverage
+
+Вызывалась команда 
+
+```bash
+sbt compile coverage test && sbt coverageReport
+```
+
+Там генерировался html файл, вот скриншот со статистикой:
+
+![Test coverage result](./examples/test_coverage.png)
